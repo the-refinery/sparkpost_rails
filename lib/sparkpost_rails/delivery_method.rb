@@ -31,19 +31,17 @@ module SparkpostRails
             :email  => mail.from.first
           },
           :subject  => mail.subject,
-          :reply_to => mail.reply_to.first,
-          :text     => mail.text_part.body,
-          :html     => mail.html_part.body
+          :reply_to => mail.reply_to.first
         }
       }
+      puts mail.html_part
+      puts mail.text_part
       headers = {
         "Authorization" => SparkpostRails.configuration.api_key,
         "Content-Type"  => "application/json"
       }
-      r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
-      puts data
-      puts r
-      @response = r.body
+      # r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
+      # @response = r.body
     end
   end
 end
