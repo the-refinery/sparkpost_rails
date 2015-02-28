@@ -36,7 +36,7 @@ module SparkpostRails
         }
       }
       headers = { "Authorization" => SparkpostRails.configuration.api_key }
-      post('/transmissions', { headers: headers, body: data })
+      self.class.post('/transmissions', { headers: headers, body: data })
       @response = false
     end
   end
