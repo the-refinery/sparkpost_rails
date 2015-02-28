@@ -34,8 +34,12 @@ module SparkpostRails
           :reply_to => mail.reply_to.first
         }
       }
-      puts mail.html_part
-      puts mail.text_part
+      if mail.multipart?
+        data[:content][:html] = mail.html_part.body.
+        data[:content][:text] = mail.text_part.body
+      else
+        data[:content][:text] = mail.body
+      end
       headers = {
         "Authorization" => SparkpostRails.configuration.api_key,
         "Content-Type"  => "application/json"
