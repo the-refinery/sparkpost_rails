@@ -35,17 +35,20 @@ module SparkpostRails
         }
       }
       if mail.multipart?
-        data[:content][:html] = mail.html_part.body.
+        data[:content][:html] = mail.html_part.body
+        puts mail.html_part.body
         data[:content][:text] = mail.text_part.body
+        puts mail.text_part.body
       else
         data[:content][:text] = mail.body
+        puts mail.body
       end
       headers = {
         "Authorization" => SparkpostRails.configuration.api_key,
         "Content-Type"  => "application/json"
       }
       r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
-      puts r 
+      puts r
       @response = r.body
     end
   end
