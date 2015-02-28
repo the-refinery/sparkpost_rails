@@ -19,14 +19,14 @@ module SparkpostRails
         :recipients => [
           {
             :address => {
-              # :name   => "",
+              :name   => mail[:to].display_names.first,
               :email  => mail.to.first
             }
           }
         ],
         :content => {
           :from => {
-            # :name   => "",
+            :name   => mail[:to].display_names.first,
             :email  => mail.from.first
           },
           :subject  => mail.subject,
@@ -36,8 +36,8 @@ module SparkpostRails
         }
       }
       headers = { "Authorization" => SparkpostRails.configuration.api_key }
-      self.class.post('/transmissions', { headers: headers, body: data })
-      @response = false
+      r = self.class.post('/transmissions', { headers: headers, body: data })
+      @response = r.body
     end
   end
 end
