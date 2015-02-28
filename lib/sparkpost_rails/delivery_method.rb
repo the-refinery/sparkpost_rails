@@ -32,8 +32,8 @@ module SparkpostRails
           },
           :subject  => mail.subject,
           :reply_to => mail.reply_to.first,
-          :text     => mail.text_part,
-          :html     => mail.html_part
+          :text     => mail.text_part.body,
+          :html     => mail.html_part.body
         }
       }
       headers = {
@@ -41,6 +41,7 @@ module SparkpostRails
         "Content-Type"  => "application/json"
       }
       r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
+      puts data
       puts r
       @response = r.body
     end
