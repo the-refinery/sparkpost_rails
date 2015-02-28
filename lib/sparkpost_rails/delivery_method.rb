@@ -1,7 +1,7 @@
 module SparkpostRails
   class DeliveryMethod
     include HTTParty
-    base_uri "https://api.sparkpost.com/api"
+    base_uri "https://api.sparkpost.com/api/v1"
 
     def deliver!(mail)
       data = {
@@ -23,7 +23,8 @@ module SparkpostRails
         }
       }
       puts mail
-      #post('/v1/transmissions', data)
+      # headers = { "Authorization" => SparkpostRails.configuration.api_key }
+      # post('/transmissions', { headers: headers, body: data })
     end
   end
 end
