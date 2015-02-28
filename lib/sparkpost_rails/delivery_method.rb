@@ -16,6 +16,7 @@ module SparkpostRails
           :click_tracking => SparkpostRails.configuration.track_clicks
         },
         :campaign_id => "",
+        :return_path => "",
         :recipients => [
           {
             :address => {
