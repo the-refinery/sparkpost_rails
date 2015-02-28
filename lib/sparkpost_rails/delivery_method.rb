@@ -3,6 +3,12 @@ module SparkpostRails
     include HTTParty
     base_uri "https://api.sparkpost.com/api/v1"
 
+    attr_accessor :settings, :response
+
+    def initialize(options = {})
+      @settings = options
+    end
+
     def deliver!(mail)
       data = {
         :options => {
@@ -25,6 +31,7 @@ module SparkpostRails
       puts mail
       # headers = { "Authorization" => SparkpostRails.configuration.api_key }
       # post('/transmissions', { headers: headers, body: data })
+      @response = false
     end
   end
 end
