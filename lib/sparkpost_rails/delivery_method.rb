@@ -19,15 +19,15 @@ module SparkpostRails
         :recipients => [
           {
             :address => {
-              :name   => mail.to_addrs.first.display_name,
-              :email  => mail.to_addrs.first.address
+              # :name   => "",
+              :email  => mail.to.first
             }
           }
         ],
         :content => {
           :from => {
-            :name   => mail.from_addrs.first.display_name,
-            :email  => mail.from_addrs.first.address
+            # :name   => "",
+            :email  => mail.from.first
           },
           :subject  => mail.subject,
           :reply_to => mail.reply_to.first,
