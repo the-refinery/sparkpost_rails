@@ -45,7 +45,6 @@ module SparkpostRails
         "Content-Type"  => "application/json"
       }
       r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
-      puts r
       @response = r.body
     end
   end

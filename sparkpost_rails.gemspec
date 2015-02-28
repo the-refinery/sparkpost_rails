@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
   s.name        = 'sparkpost_rails'
-  s.version     = '0.0.2'
+  s.version     = '0.0.3'
   s.date        = '2015-02-28'
   s.summary     = "Sparkpost for Rails"
-  s.description = "Delivery Method for sending emails via Sparkpost REST API in Rails"
+  s.description = "Delivery Method for Rails ActionMailer to send emails using the Sparkpost API"
   s.authors     = ["Kevin Kimball"]
   s.email       = 'kwkimball@gmail.com'
   s.homepage    = 'https://github.com/kevinkimball/sparkpost_rails'
