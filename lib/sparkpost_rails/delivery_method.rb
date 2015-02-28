@@ -15,8 +15,8 @@ module SparkpostRails
           :open_tracking => SparkpostRails.configuration.track_opens,
           :click_tracking => SparkpostRails.configuration.track_clicks
         },
-        :campaign_id => "",
-        :return_path => "",
+        :campaign_id => SparkpostRails.configuration.campaign_id,
+        :return_path => SparkpostRails.configuration.return_path,
         :recipients => [
           {
             :address => {
@@ -36,12 +36,9 @@ module SparkpostRails
       }
       if mail.multipart?
         data[:content][:html] = mail.html_part.body.to_s
-        puts mail.html_part.body.to_s
         data[:content][:text] = mail.text_part.body.to_s
-        puts mail.text_part.body.to_s
       else
         data[:content][:text] = mail.body.to_s
-        puts mail.body.to_s
       end
       headers = {
         "Authorization" => SparkpostRails.configuration.api_key,

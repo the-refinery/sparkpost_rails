@@ -16,11 +16,15 @@ module SparkpostRails
     attr_accessor :api_key
     attr_accessor :track_opens
     attr_accessor :track_clicks
+    attr_accessor :campaign_id
+    attr_accessor :return_path
 
     def initialize
-      @api_key = ''
+      @api_key = ""
       @track_opens = false
       @track_clicks = false
+      @campaign_id = "default"
+      @return_path = ""
     end
   end
 end
