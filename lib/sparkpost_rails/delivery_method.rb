@@ -28,7 +28,7 @@ module SparkpostRails
           :html     => ""
         }
       }
-      puts mail
+      puts mail.inspect
       # headers = { "Authorization" => SparkpostRails.configuration.api_key }
       # post('/transmissions', { headers: headers, body: data })
       @response = false
