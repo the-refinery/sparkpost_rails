@@ -8,12 +8,11 @@ Gem::Specification.new do |s|
   s.email       = 'kwkimball@gmail.com'
   s.homepage    = 'https://github.com/kevinkimball/sparkpost_rails'
   s.license     = 'MIT'
-
   s.files       = [
                     "lib/sparkpost_rails.rb",
                     "lib/sparkpost_rails/delivery_method.rb",
                     "lib/sparkpost_rails/railtie.rb"
                   ]
 
-  s.add_runtime_dependency = 'httparty', ['>= 0.13.3']
+  s.add_runtime_dependency 'httparty', ['>= 0.13.3']
 end
