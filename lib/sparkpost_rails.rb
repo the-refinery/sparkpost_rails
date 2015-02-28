@@ -14,9 +14,13 @@ module SparkpostRails
 
   class Configuration
     attr_accessor :api_key
+    attr_accessor :track_opens
+    attr_accessor :track_clicks
 
     def initialize
       @api_key = ''
+      @track_opens = false
+      @track_clicks = false
     end
   end
 end

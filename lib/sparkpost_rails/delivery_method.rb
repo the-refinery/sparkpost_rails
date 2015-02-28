@@ -12,8 +12,8 @@ module SparkpostRails
     def deliver!(mail)
       data = {
         :options => {
-          :open_tracking => true,
-          :click_tracking => true
+          :open_tracking => SparkpostRails.configuration.track_opens,
+          :click_tracking => SparkpostRails.configuration.track_clicks
         },
         :campaign_id => "",
         :recipients => {},
