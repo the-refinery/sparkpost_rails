@@ -44,8 +44,8 @@ module SparkpostRails
         "Authorization" => SparkpostRails.configuration.api_key,
         "Content-Type"  => "application/json"
       }
-      # r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
-      # @response = r.body
+      r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
+      @response = r.body
     end
   end
 end
