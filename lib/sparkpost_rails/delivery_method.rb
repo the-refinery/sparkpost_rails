@@ -35,13 +35,13 @@ module SparkpostRails
         }
       }
       if mail.multipart?
-        data[:content][:html] = mail.html_part.body
-        puts mail.html_part.body
-        data[:content][:text] = mail.text_part.body
-        puts mail.text_part.body
+        data[:content][:html] = mail.html_part.body.to_s
+        puts mail.html_part.body.to_s
+        data[:content][:text] = mail.text_part.body.to_s
+        puts mail.text_part.body.to_s
       else
-        data[:content][:text] = mail.body
-        puts mail.body
+        data[:content][:text] = mail.body.to_s
+        puts mail.body.to_s
       end
       headers = {
         "Authorization" => SparkpostRails.configuration.api_key,
