@@ -35,8 +35,12 @@ module SparkpostRails
           :html     => mail.html_part
         }
       }
-      headers = { "Authorization" => SparkpostRails.configuration.api_key }
+      headers = {
+        "Authorization" => SparkpostRails.configuration.api_key,
+        "Content-Type"  => "application/json"
+      }
       r = self.class.post('/transmissions', { headers: headers, body: data })
+      puts r
       @response = r.body
     end
   end
