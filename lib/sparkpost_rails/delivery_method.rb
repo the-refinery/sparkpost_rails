@@ -27,7 +27,7 @@ module SparkpostRails
         ],
         :content => {
           :from => {
-            :name   => mail[:to].display_names.first,
+            :name   => mail[:from].display_names.first,
             :email  => mail.from.first
           },
           :subject  => mail.subject,
