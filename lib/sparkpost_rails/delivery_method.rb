@@ -1,7 +1,6 @@
 module SparkpostRails
   class DeliveryMethod
-    include HTTParty
-    base_uri "https://api.sparkpost.com/api/v1"
+    require 'net/http'
 
     attr_accessor :settings, :response
 
@@ -10,42 +9,103 @@ module SparkpostRails
     end
 
     def deliver!(mail)
-      data = {
-        :options => {
-          :open_tracking => SparkpostRails.configuration.track_opens,
-          :click_tracking => SparkpostRails.configuration.track_clicks
-        },
-        :campaign_id => SparkpostRails.configuration.campaign_id,
-        :return_path => SparkpostRails.configuration.return_path,
-        :recipients => [
-          {
-            :address => {
-              :name   => mail[:to].display_names.first,
-              :email  => mail.to.first
-            }
-          }
-        ],
+      prepare_data(mail)
+      prepare_options
+      prepare_headers
+
+      result = post_to_api
+      @response = result.body
+    end
+
+  private
+
+    def prepare_data(mail)
+      @data = {
+        :recipients => prepare_recipients(mail),
         :content => {
-          :from => {
-            :name   => mail[:from].display_names.first,
-            :email  => mail.from.first
-          },
+          :from => prepare_from(mail),
           :subject  => mail.subject,
-          :reply_to => mail.reply_to.first
         }
       }
-      if mail.multipart?
-        data[:content][:html] = mail.html_part.body.to_s
-        data[:content][:text] = mail.text_part.body.to_s
-      else
-        data[:content][:text] = mail.body.to_s
+
+      unless mail.reply_to.nil?
+        @data[:content][:reply_to] = mail.reply_to.first
       end
-      headers = {
+
+      prepare_content mail
+    end
+
+    def prepare_recipients(mail)
+      prepare_addresses(mail.to, mail[:to].display_names)
+    end
+
+    def prepare_addresses(emails, names)
+      emails = [emails] unless emails.is_a?(Array)
+      emails.each_with_index.map {|email, index| prepare_address(email, index, names) }
+    end
+
+    def prepare_address(email, index, names)
+      if !names[index].nil?
+        { address:  { email: email, name: names[index] } }
+      else
+        { address: { email: email } }
+      end
+    end
+
+    def prepare_from(mail)
+      if !mail[:from].display_names.first.nil?
+        { email: mail.from.first, name: mail[:from].display_names.first }
+      else
+        { email: mail.from.first }
+      end
+    end
+
+    def prepare_content mail
+      if mail.multipart?
+        @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
+        @data[:content][:text] = cleanse_encoding(mail.text_part.body.to_s)
+      else
+        @data[:content][:html] = cleanse_encoding(mail.body.to_s)
+      end
+    end
+
+    def cleanse_encoding content
+      ::JSON.parse({c: content}.to_json)["c"]
+    end
+
+    def prepare_options
+      @data[:options] = {
+        :open_tracking => SparkpostRails.configuration.track_opens,
+        :click_tracking => SparkpostRails.configuration.track_clicks
+      }
+
+      unless SparkpostRails.configuration.campaign_id.nil?
+        @data[:campaign_id] = SparkpostRails.configuration.campaign_id
+      end
+
+      unless SparkpostRails.configuration.return_path.nil?
+        @data[:return_path] = SparkpostRails.configuration.return_path
+      end
+    end
+
+    def prepare_headers
+      @headers = {
         "Authorization" => SparkpostRails.configuration.api_key,
         "Content-Type"  => "application/json"
       }
-      r = self.class.post('/transmissions', { headers: headers, body: data.to_json })
-      @response = r.body
+    end
+
+    def post_to_api
+      url = "https://api.sparkpost.com/api/v1/transmissions"
+
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Post.new(uri.path, @headers)
+      request.body = JSON.generate(@data)
+
+      http.request(request)
     end
   end
 end

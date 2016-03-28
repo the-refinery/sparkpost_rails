@@ -1,4 +1,3 @@
-require "httparty"
 require "sparkpost_rails/delivery_method"
 require "sparkpost_rails/railtie"
 
@@ -23,8 +22,8 @@ module SparkpostRails
       @api_key = ""
       @track_opens = false
       @track_clicks = false
-      @campaign_id = "default"
-      @return_path = ""
+      @campaign_id = nil
+      @return_path = nil
     end
   end
 end
