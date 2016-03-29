@@ -3,7 +3,7 @@
 In `Gemfile` add
 
 ```
-gem 'sparkpost_rails', :github => 'kevinkimball/sparkpost_rails'
+gem 'sparkpost_rails', :github => 'the-refinery/sparkpost_rails'
 ```
 
 In `config/initializers/sparkpost_rails.rb` add
