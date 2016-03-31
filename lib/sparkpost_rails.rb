@@ -1,7 +1,8 @@
 require "sparkpost_rails/delivery_method"
+require "sparkpost_rails/exceptions"
 require "sparkpost_rails/railtie"
 
-module SparkpostRails
+module SparkPostRails
   class << self
     attr_accessor :configuration
   end

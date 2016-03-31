@@ -10,7 +10,7 @@ gem 'sparkpost_rails', :github => 'the-refinery/sparkpost_rails'
 In `config/initializers/sparkpost_rails.rb` add
 
 ```
-SparkpostRails.configure do |c|
+SparkPostRails.configure do |c|
   c.track_opens = true
   c.track_clicks = true
   c.return_path = 'BOUNCE-EMAIL@YOUR-DOMAIN.COM'
@@ -22,7 +22,7 @@ By default, the gem will look for your SparkPost API key in your environment, wi
 'SPARKPOST_API_KEY'.  You can override this setting by identifying a different key in the initializer:
 
 ```
-SparkpostRails.configure do |c|
+SparkPostRails.configure do |c|
   c.api_key = 'YOUR API KEY'
 end
 ```

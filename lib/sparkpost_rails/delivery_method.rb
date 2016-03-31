@@ -1,4 +1,4 @@
-module SparkpostRails
+module SparkPostRails
   class DeliveryMethod
     require 'net/http'
 
@@ -14,7 +14,8 @@ module SparkpostRails
       prepare_headers
 
       result = post_to_api
-      @response = result.body
+
+      process_result result
     end
 
   private
@@ -75,22 +76,22 @@ module SparkpostRails
 
     def prepare_options
       @data[:options] = {
-        :open_tracking => SparkpostRails.configuration.track_opens,
-        :click_tracking => SparkpostRails.configuration.track_clicks
+        :open_tracking => SparkPostRails.configuration.track_opens,
+        :click_tracking => SparkPostRails.configuration.track_clicks
       }
 
-      unless SparkpostRails.configuration.campaign_id.nil?
-        @data[:campaign_id] = SparkpostRails.configuration.campaign_id
+      unless SparkPostRails.configuration.campaign_id.nil?
+        @data[:campaign_id] = SparkPostRails.configuration.campaign_id
       end
 
-      unless SparkpostRails.configuration.return_path.nil?
-        @data[:return_path] = SparkpostRails.configuration.return_path
+      unless SparkPostRails.configuration.return_path.nil?
+        @data[:return_path] = SparkPostRails.configuration.return_path
       end
     end
 
     def prepare_headers
       @headers = {
-        "Authorization" => SparkpostRails.configuration.api_key,
+        "Authorization" => SparkPostRails.configuration.api_key,
         "Content-Type"  => "application/json"
       }
     end
@@ -107,5 +108,17 @@ module SparkpostRails
 
       http.request(request)
     end
+
+    def process_result result
+      result_data = JSON.parse(result.body)
+
+      if result_data["errors"]
+        @response = result_data["errors"]
+        raise SparkPostRails::DeliveryException, @response
+      else
+        @response = result_data["results"]
+      end
+    end
+
   end
 end
