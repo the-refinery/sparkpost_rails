@@ -33,7 +33,7 @@ describe SparkPostRails::DeliveryMethod do
       test_email = Mailer.test_email
       @delivery_method.deliver!(test_email)
 
-      expect(@delivery_method.data[:campaign_id]).to eq(nil)
+      expect(@delivery_method.data.has_key?(:campaign_id)).to eq(false)
     end
 
     it "contains supplied campaign_id" do
@@ -51,7 +51,7 @@ describe SparkPostRails::DeliveryMethod do
       test_email = Mailer.test_email
       @delivery_method.deliver!(test_email)
 
-      expect(@delivery_method.data[:return_path]).to eq(nil)
+      expect(@delivery_method.data.has_key?(:return_path)).to eq(false)
     end
 
     it "contains supplied return_path" do
