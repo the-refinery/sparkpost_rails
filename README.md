@@ -1,4 +1,4 @@
-# Sparkpost Rails
+# SparkPost Rails
 
 In `Gemfile` add
 
@@ -6,8 +6,18 @@ In `Gemfile` add
 gem 'sparkpost_rails', :github => 'the-refinery/sparkpost_rails'
 ```
 
+By default, the gem will look for your SparkPost API key in your environment, with the key
+'SPARKPOST_API_KEY'.  You can override this setting by identifying a different key in the initializer 
+(`config/initializers/sparkpost_rails.rb`):
 
-In `config/initializers/sparkpost_rails.rb` add
+```
+SparkPostRails.configure do |c|
+  c.api_key = 'YOUR API KEY'
+end
+```
+
+Additionally, the following configuration options are available to be set in your initializer 
+( `config/initializers/sparkpost_rails.rb`):
 
 ```
 SparkPostRails.configure do |c|
@@ -18,13 +28,14 @@ SparkPostRails.configure do |c|
 end
 ```
 
-By default, the gem will look for your SparkPost API key in your environment, with the key
-'SPARKPOST_API_KEY'.  You can override this setting by identifying a different key in the initializer:
+The default values for these optional configuration settings are:
 
 ```
-SparkPostRails.configure do |c|
-  c.api_key = 'YOUR API KEY'
-end
+track_opens = false
+track_clicks = false
+return_path = nil
+campaign_id = nil
+
 ```
 
 In `config/environments/production.rb` add
@@ -33,7 +44,31 @@ In `config/environments/production.rb` add
 config.action_mailer.delivery_method = :sparkpost
 ```
 
-Deliver method returns the Sparkpost response
+The deliver! method returns the response data from the SparkPost API call as a hash:
+
 ```
 response = UserMailer.welcome_email(user).deliver_now!
 ```
+
+Example:
+
+```
+{"total_rejected_recipients"=>0, "total_accepted_recipients"=>1, "id"=>"00000000000000"}
+```
+
+# Update Note!
+
+If you have been using Version 0.0.5 or earlier of this gem, when you upgrade, you'll need to 
+change your initalizer as follows:
+
+```
+SparkpostRails.configure do |c|
+```
+
+becomes: 
+
+```
+SparkPostRails.configure do |c|
+```
+
+We have changed the module name to align with the official SparkPost gem's naming convention.
