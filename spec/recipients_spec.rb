@@ -45,9 +45,6 @@ describe SparkPostRails::DeliveryMethod do
 
         expect(@delivery_method.data[:recipients]).to eq([{:address=>{:email=>"to1@example.com", :name=>"Sam Test"}}, {:address=>{:email=>"to2@example.com"}}])
       end
-
     end
-
   end
-
 end
