@@ -25,11 +25,26 @@ class Mailer < ActionMailer::Base
       from: "from@example.com",
       to: "to@example.com",
       subject: "Test Email",
-      body: "Hello, Testing!"
+      text_part: "Hello, Testing!"
     }
 
     data.merge! options
 
-    mail(data)
+    if data.has_key?(:html_part)
+
+      mail(data) do |format|
+        format.text {render text: data[:text_part]}
+        format.html {render text: data[:html_part]}
+      end
+
+    else
+
+      mail(data) do |format|
+        format.text {render text: data[:text_part]}
+      end
+
+    end
+
+
   end
 end
