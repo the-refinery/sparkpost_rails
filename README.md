@@ -35,7 +35,6 @@ track_opens = false
 track_clicks = false
 return_path = nil
 campaign_id = nil
-
 ```
 
 In `config/environments/production.rb` add
