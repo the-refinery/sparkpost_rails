@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/the-refinery/sparkpost_rails.svg?branch=master)](https://travis-ci.org/the-refinery/sparkpost_rails)
+
 # SparkPost Rails
 
 In `Gemfile` add
