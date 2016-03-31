@@ -1,16 +1,16 @@
+$:.push File.expand_path("../lib", __FILE__)
+
+require "sparkpost_rails/version"
+
 Gem::Specification.new do |s|
   s.name        = 'sparkpost_rails'
-  s.version     = '0.9.0'
-  s.date        = '2016-03-25'
-  s.summary     = "Sparkpost for Rails"
-  s.description = "Delivery Method for Rails ActionMailer to send emails using the Sparkpost API"
+  s.version     = SparkPostRails::VERSION
   s.authors     = ["Kevin Kimball", "Dave Goerlich"]
   s.email       = ['kwkimball@gmail.com', 'dave.goerlich@the-refinery.io']
   s.homepage    = 'https://github.com/the-refinery/sparkpost_rails'
+  s.summary     = "SparkPost for Rails"
+  s.description = "Delivery Method for Rails ActionMailer to send emails using the SparkPost API"
   s.license     = 'MIT'
-  s.files       = [
-                    "lib/sparkpost_rails.rb",
-                    "lib/sparkpost_rails/delivery_method.rb",
-                    "lib/sparkpost_rails/railtie.rb"
-                  ]
+
+  s.files = Dir["{lib}/**/*"] + ["LICENSE", "README.md"]
 end
