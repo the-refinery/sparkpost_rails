@@ -19,7 +19,12 @@ module SparkpostRails
     attr_accessor :return_path
 
     def initialize
-      @api_key = ""
+      if ENV.has_key?("SPARKPOST_API_KEY")
+        @api_key = ENV["SPARKPOST_API_KEY"]
+      else
+        @api_key = ""
+      end
+
       @track_opens = false
       @track_clicks = false
       @campaign_id = nil
