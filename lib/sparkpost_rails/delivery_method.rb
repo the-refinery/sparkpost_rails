@@ -2,14 +2,22 @@ module SparkPostRails
   class DeliveryMethod
     require 'net/http'
 
-    attr_accessor :settings, :response
+    attr_accessor :settings, :data, :response
 
     def initialize(options = {})
       @settings = options
     end
 
     def deliver!(mail)
-      prepare_data(mail)
+      @data = {content: {}}
+
+      prepare_recipients_from mail
+      prepare_from_address_from mail
+      prepare_reply_to_address_from mail
+
+      prepare_subject_from mail
+      prepare_content_from mail
+
       prepare_options
       prepare_headers
 
@@ -19,33 +27,16 @@ module SparkPostRails
     end
 
   private
-
-    def prepare_data(mail)
-      @data = {
-        :recipients => prepare_recipients(mail),
-        :content => {
-          :from => prepare_from(mail),
-          :subject  => mail.subject,
-        }
-      }
-
-      unless mail.reply_to.nil?
-        @data[:content][:reply_to] = mail.reply_to.first
-      end
-
-      prepare_content mail
+    def prepare_recipients_from mail
+      @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
     end
 
-    def prepare_recipients(mail)
-      prepare_addresses(mail.to, mail[:to].display_names)
-    end
-
-    def prepare_addresses(emails, names)
+    def prepare_addresses emails, names
       emails = [emails] unless emails.is_a?(Array)
       emails.each_with_index.map {|email, index| prepare_address(email, index, names) }
     end
 
-    def prepare_address(email, index, names)
+    def prepare_address email, index, names
       if !names[index].nil?
         { address:  { email: email, name: names[index] } }
       else
@@ -53,15 +44,27 @@ module SparkPostRails
       end
     end
 
-    def prepare_from(mail)
+    def prepare_from_address_from mail
       if !mail[:from].display_names.first.nil?
-        { email: mail.from.first, name: mail[:from].display_names.first }
+        from = { email: mail.from.first, name: mail[:from].display_names.first }
       else
-        { email: mail.from.first }
+        from = { email: mail.from.first }
+      end
+
+      @data[:content][:from] = from
+    end
+
+    def prepare_reply_to_address_from mail
+      unless mail.reply_to.nil?
+        @data[:content][:reply_to] = mail.reply_to.first
       end
     end
 
-    def prepare_content mail
+    def prepare_subject_from mail
+      @data[:content][:subject] = mail.subject
+    end
+
+    def prepare_content_from mail
       if mail.multipart?
         @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
         @data[:content][:text] = cleanse_encoding(mail.text_part.body.to_s)
