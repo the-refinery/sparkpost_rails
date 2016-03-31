@@ -122,6 +122,5 @@ module SparkPostRails
         @response = result_data["results"]
       end
     end
-
   end
 end

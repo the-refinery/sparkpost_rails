@@ -13,7 +13,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     stub_request(:any, "https://api.sparkpost.com/api/v1/transmissions").
-      to_return(body: "{\"response\":{\"total_rejected_recipients\":0,\"total_accepted_recipients\":1,\"id\":\"00000000000000000\"}}", status: 200)
+      to_return(body: "{\"results\":{\"total_rejected_recipients\":0,\"total_accepted_recipients\":1,\"id\":\"00000000000000000\"}}", status: 200)
   end
 
 end
