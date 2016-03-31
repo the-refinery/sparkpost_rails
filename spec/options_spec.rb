@@ -2,31 +2,46 @@ require 'spec_helper'
 
 describe SparkPostRails::DeliveryMethod do
 
-  before(:all) do
-    SparkPostRails.configure do |c|
-      c.track_opens = true
-      c.track_clicks = false
-    end
-  end
-
   before(:each) do
     @delivery_method = SparkPostRails::DeliveryMethod.new
   end
 
   context "Options" do
 
-    it "handles track_opens option" do
+    it "handles default track_opens option" do
+      test_email = Mailer.test_email
+      @delivery_method.deliver!(test_email)
+
+      expect(@delivery_method.data[:options][:open_tracking]).to eq(false)
+    end
+
+    it "handles supplied track_opens option" do
+      SparkPostRails.configure do |c|
+        c.track_opens = true
+      end
+
       test_email = Mailer.test_email
       @delivery_method.deliver!(test_email)
 
       expect(@delivery_method.data[:options][:open_tracking]).to eq(true)
-    end
+    end 
 
-    it "handles track_clicks option" do
+    it "handles default track_clicks option" do
       test_email = Mailer.test_email
       @delivery_method.deliver!(test_email)
 
       expect(@delivery_method.data[:options][:click_tracking]).to eq(false)
+    end
+
+    it "handles set track_clicks option" do
+      SparkPostRails.configure do |c|
+        c.track_clicks = true
+      end
+      
+      test_email = Mailer.test_email
+      @delivery_method.deliver!(test_email)
+
+      expect(@delivery_method.data[:options][:click_tracking]).to eq(true)
     end
 
     it "does not contain unset campaign_id" do
