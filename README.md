@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/sparkpost_rails.svg)](https://badge.fury.io/rb/sparkpost_rails)
 [![Build Status](https://travis-ci.org/the-refinery/sparkpost_rails.svg?branch=master)](https://travis-ci.org/the-refinery/sparkpost_rails)
 
 # SparkPost Rails
@@ -5,7 +6,7 @@
 In `Gemfile` add
 
 ```
-gem 'sparkpost_rails', :github => 'the-refinery/sparkpost_rails'
+gem 'sparkpost_rails'
 ```
 
 By default, the gem will look for your SparkPost API key in your environment, with the key
