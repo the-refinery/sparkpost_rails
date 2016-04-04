@@ -85,17 +85,28 @@ module SparkPostRails
 
     def prepare_attachments_from mail
       attachments = Array.new
+      inline_images = Array.new
 
       mail.attachments.each do |attachment|
         #We decode and reencode here to ensure that attachments are 
         #Base64 encoded without line breaks as required by the API.
-        attachments << { name: attachment.filename,
-                         type: attachment.content_type,
-                         data: Base64.encode64(attachment.body.decoded).gsub("\n","") }
+        attachment_data = { name: attachment.filename,
+                            type: attachment.content_type,
+                            data: Base64.encode64(attachment.body.decoded).gsub("\n","") }
+
+        if attachment.inline?
+          inline_images << attachment_data
+        else
+          attachments << attachment_data
+        end
       end
 
       if attachments.count > 0
         @data[:content][:attachments] = attachments
+      end
+
+      if inline_images.count > 0
+        @data[:content][:inline_images] = inline_images
       end
     end
 

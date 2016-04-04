@@ -44,6 +44,14 @@ class Mailer < ActionMailer::Base
       options.delete(:images)
     end
 
+    if options.has_key?(:inline_attachments)
+      options[:inline_attachments].times do |i|
+        attachments.inline["image_#{i}.png"] = sparkpost_logo_contents
+      end
+
+      options.delete(:inline_attachments)
+    end
+
     data.merge! options
 
     if data.has_key?(:html_part)
