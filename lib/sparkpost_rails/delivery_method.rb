@@ -17,6 +17,7 @@ module SparkPostRails
 
       prepare_subject_from mail
       prepare_content_from mail
+      prepare_attachments_from mail
 
       prepare_options
       prepare_headers
@@ -66,8 +67,13 @@ module SparkPostRails
 
     def prepare_content_from mail
       if mail.multipart?
-        @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
-        @data[:content][:text] = cleanse_encoding(mail.text_part.body.to_s)
+        if mail.html_part
+          @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
+        end
+
+        if mail.text_part
+          @data[:content][:text] = cleanse_encoding(mail.text_part.body.to_s)
+        end
       else
         @data[:content][:text] = cleanse_encoding(mail.body.to_s)
       end
@@ -75,6 +81,22 @@ module SparkPostRails
 
     def cleanse_encoding content
       ::JSON.parse({c: content}.to_json)["c"]
+    end
+
+    def prepare_attachments_from mail
+      attachments = Array.new
+
+      mail.attachments.each do |attachment|
+        #We decode and reencode here to ensure that attachments are 
+        #Base64 encoded without line breaks as required by the API.
+        attachments << { name: attachment.filename,
+                         type: attachment.content_type,
+                         data: Base64.encode64(attachment.body.decoded).gsub("\n","") }
+      end
+
+      if attachments.count > 0
+        @data[:content][:attachments] = attachments
+      end
     end
 
     def prepare_options
