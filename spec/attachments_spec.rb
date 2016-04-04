@@ -6,6 +6,16 @@ describe SparkPostRails::DeliveryMethod do
     @delivery_method = SparkPostRails::DeliveryMethod.new
   end
 
+  context "No Attachments" do
+    it "does not include attachment elements in the data" do
+      test_email = Mailer.test_email
+      @delivery_method.deliver!(test_email)
+
+      expect(@delivery_method.data[:content].has_key?(:attachments)).to eq(false)
+      expect(@delivery_method.data[:content].has_key?(:inline_images)).to eq(false)
+    end
+  end
+
   context "Standard Attachments" do
     it "accepts a single attachment" do
       test_email = Mailer.test_email attachments: 1
