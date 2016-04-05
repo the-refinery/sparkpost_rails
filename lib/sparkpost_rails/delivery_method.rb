@@ -29,6 +29,10 @@ module SparkPostRails
   private
     def prepare_recipients_from mail
       @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
+      if !mail.cc.nil?
+        @data[:recipients] << prepare_copy_addresses(mail.cc, mail[:cc].names)
+      end
+      # @data[:recipients] << prepare_copy_addresses(mail.bcc, mail[:bcc].display_names)
     end
 
     def prepare_addresses emails, names
@@ -36,9 +40,26 @@ module SparkPostRails
       emails.each_with_index.map {|email, index| prepare_address(email, index, names) }
     end
 
+    def prepare_copy_addresses emails, names, headers
+      emails = [emails] unless emails.is_a?(Array)
+      emails.each_with_index.map {|email, index| prepare_copy_address(email, index, names, headers) }
+    end
+
     def prepare_address email, index, names
       if !names[index].nil?
         { address:  { email: email, name: names[index] } }
+      else
+        { address: { email: email } }
+      end
+    end
+
+    def prepare_copy_address email, index, names, header_to
+      if !names[index].nil? && !header_to.nil?
+        { address:  { email: email, name: names[index], header_to: header_to } }
+      elsif !names[index].nil?
+        { address:  { email: email, name: names[index] } }
+      elsif !header_to.nil?
+        { address: { email: email, header_to: header_to } }
       else
         { address: { email: email } }
       end
@@ -70,6 +91,11 @@ module SparkPostRails
         @data[:content][:text] = cleanse_encoding(mail.text_part.body.to_s)
       else
         @data[:content][:text] = cleanse_encoding(mail.body.to_s)
+      end
+
+      if !mail[:cc].nil?
+        copies = prepare_addresses(mail.cc, mail[:cc].display_names)
+        @data[:content][:headers] = { cc: copies }
       end
     end
 
