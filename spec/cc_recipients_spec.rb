@@ -12,8 +12,6 @@ describe SparkPostRails::DeliveryMethod do
         test_email = Mailer.test_email cc: "cc@example.com"
         @delivery_method.deliver!(test_email)
 
-        puts @delivery_method.data
-
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to@example.com"}}, {address: {email: "cc@example.com", header_to: "to@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
       end
