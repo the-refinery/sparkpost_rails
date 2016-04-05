@@ -30,7 +30,7 @@ module SparkPostRails
     def prepare_recipients_from mail
       @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
       if !mail.cc.nil?
-        @data[:recipients] += prepare_copy_addresses(mail.cc, mail.to.first).flatten
+        @data[:recipients] += prepare_copy_addresses(mail.cc, mail[:cc].display_names, mail.to.first).flatten
       end
       # @data[:recipients] << prepare_copy_addresses(mail.bcc, mail[:bcc].display_names)
     end
@@ -48,18 +48,18 @@ module SparkPostRails
       end
     end
 
-    def prepare_copy_addresses emails, to_email
+    def prepare_copy_addresses emails, names, header_to
       emails = [emails] unless emails.is_a?(Array)
-      emails.each_with_index.map {|email, index| prepare_copy_address(email, index, to_email) }
+      emails.each_with_index.map {|email, index| prepare_copy_address(email, index, names, header_to) }
     end
 
-    def prepare_copy_address email, index, to_email
-      # if !name.nil? && !header_to.nil?
-      #   { address:  { email: email, name: name, header_to: to_email } }
-      # elsif !name.nil?
-      #   { address:  { email: email, name: name } }
-      if !to_email.nil?
-        { address: { email: email, header_to: to_email } }
+    def prepare_copy_address email, index, names, header_to
+      if !names[index].nil? && !header_to.nil?
+        { address:  { email: email, name: names[index], header_to: header_to } }
+      elsif !names[index].nil?
+        { address:  { email: email, name: names[index] } }
+      elsif !header_to.nil?
+        { address: { email: email, header_to: header_to } }
       else
         { address: { email: email } }
       end

@@ -23,10 +23,10 @@ describe SparkPostRails::DeliveryMethod do
       end
 
       it "adds ccs to recipients with name and email" do
-        test_email = Mailer.test_email to: "Joe Test <to@example.com>", cc: "Carl Copy <cc1@example.com> <to@example.com>"
+        test_email = Mailer.test_email to: "Joe Test <to@example.com>", cc: "Carl Copy <cc@example.com>"
         @delivery_method.deliver!(test_email)
 
-        expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to@example.com", name: "Joe Test"}}, {address: {email: "cc@example.com", name: "Chris Copy", header_to: "to@example.com"}}])
+        expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to@example.com", name: "Joe Test"}}, {address: {email: "cc@example.com", name: "Carl Copy", header_to: "to@example.com"}}])
       end
 
       # it "adds content cc headers with email only" do

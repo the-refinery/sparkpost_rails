@@ -131,6 +131,3 @@ DEPENDENCIES
   rspec (>= 3.4.0)
   sparkpost_rails!
   webmock (>= 1.24.2)
-
-BUNDLED WITH
-   1.12.0.pre.2
