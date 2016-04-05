@@ -6,10 +6,6 @@ describe SparkPostRails::DeliveryMethod do
     @delivery_method = SparkPostRails::DeliveryMethod.new
   end
 
-  context "No CC Recipients" do
-
-  end
-
   context "CC Recipients" do
 
     context "single to recipient and single cc recipient" do
