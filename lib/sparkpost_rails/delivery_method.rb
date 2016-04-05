@@ -16,6 +16,7 @@ module SparkPostRails
       prepare_reply_to_address_from mail
 
       prepare_subject_from mail
+      prepare_cc_headers_from mail
       prepare_content_from mail
 
       prepare_options
@@ -85,6 +86,17 @@ module SparkPostRails
       @data[:content][:subject] = mail.subject
     end
 
+    def prepare_cc_headers_from mail
+      if !mail[:cc].nil?
+        copies = prepare_addresses(mail.cc, mail[:cc].display_names)
+        emails = []
+        copies.each do |copy|
+          emails << copy[:address][:email]
+        end
+        @data[:content][:headers] = { cc: emails }
+      end
+    end
+
     def prepare_content_from mail
       if mail.multipart?
         @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
@@ -93,17 +105,6 @@ module SparkPostRails
         @data[:content][:text] = cleanse_encoding(mail.body.to_s)
       end
     end
-
-    # def prepare_headers_from mail
-    #   if !mail[:cc].nil?
-    #     copies = prepare_addresses(mail.cc, mail[:cc].display_names)
-    #     emails = []
-    #     copies[:address].each do |address|
-    #       emails << address[:email]
-    #     end
-    #     @data[:content][:headers] = { cc: copies }
-    #   end
-    # end
 
     def cleanse_encoding content
       ::JSON.parse({c: content}.to_json)["c"]
