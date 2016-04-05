@@ -33,7 +33,9 @@ module SparkPostRails
       if !mail.cc.nil?
         @data[:recipients] += prepare_copy_addresses(mail.cc, mail[:cc].display_names, mail.to.first).flatten
       end
-      # @data[:recipients] << prepare_copy_addresses(mail.bcc, mail[:bcc].display_names)
+      if !mail.bcc.nil?
+        @data[:recipients] += prepare_copy_addresses(mail.bcc, mail[:bcc].display_names, mail.to.first).flatten
+      end
     end
 
     def prepare_addresses emails, names

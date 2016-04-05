@@ -7,7 +7,6 @@ describe SparkPostRails::DeliveryMethod do
   end
 
   context "CC Recipients" do
-
     context "single to recipient and single cc recipient" do
       it "handles email only" do
         test_email = Mailer.test_email cc: "cc@example.com"
@@ -72,7 +71,7 @@ describe SparkPostRails::DeliveryMethod do
       end
     end
 
-    context "multiple to recipients with single cc recipient" do
+    context "multiple to recipients with multiple cc recipients" do
       it "handles email only" do
         test_email = Mailer.test_email to: "to1@example.com, to2@example.com", cc: "cc1@example.com, cc2@example.com"
         @delivery_method.deliver!(test_email)
