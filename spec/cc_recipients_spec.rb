@@ -13,26 +13,34 @@ describe SparkPostRails::DeliveryMethod do
   context "CC Recipients" do
 
     context "single recipient and single cc recipient" do
-      it "handles email only" do
-        test_email = Mailer.test_email cc: "<cc@example.com> to@example.com"
+      it "adds ccs to recipients with email only" do
+        test_email = Mailer.test_email cc: "cc@example.com"
         @delivery_method.deliver!(test_email)
 
+        puts @delivery_method.data
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to@example.com"}}, {address: {email: "cc@example.com", header_to: "to@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq([{cc: "cc@example.com"}])
       end
 
-      it "handles name and email" do
-        test_email = Mailer.test_email to: "Joe Test <to@example.com>", cc: "Carl Copy <cc1@example.com>, Chris Copy <cc2@example.com>"
+      it "adds ccs to recipients with name and email" do
+        test_email = Mailer.test_email to: "Joe Test <to@example.com>", cc: "Carl Copy <cc1@example.com> <to@example.com>"
         @delivery_method.deliver!(test_email)
 
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to@example.com", name: "Joe Test"}}, {address: {email: "cc@example.com", name: "Chris Copy", header_to: "to@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq([{cc: "cc@example.com"}])
       end
+
+      # it "adds content cc headers with email only" do
+        # expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+      # end
+
+      # it "adds content cc headers with name and email" do
+        # expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+      # end
     end
 
     context "single recipient and multiple cc recipients" do
     #   it "handles email only" do
-    #     test_email = Mailer.test_email to: "to1@example.com, to2@example.com"
+    #     test_email = Mailer.test_email to: "to1@example.com, to2@example.com", Chris Copy <cc2@example.com>
     #     @delivery_method.deliver!(test_email)
 
     #     expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to1@example.com"}}, {address: {email: "to2@example.com"}}])
