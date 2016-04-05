@@ -16,6 +16,7 @@ module SparkPostRails
       prepare_reply_to_address_from mail
 
       prepare_subject_from mail
+      prepare_cc_headers_from mail
       prepare_content_from mail
       prepare_attachments_from mail
 
@@ -30,6 +31,12 @@ module SparkPostRails
   private
     def prepare_recipients_from mail
       @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
+      if !mail.cc.nil?
+        @data[:recipients] += prepare_copy_addresses(mail.cc, mail[:cc].display_names, mail.to.first).flatten
+      end
+      if !mail.bcc.nil?
+        @data[:recipients] += prepare_copy_addresses(mail.bcc, mail[:bcc].display_names, mail.to.first).flatten
+      end
     end
 
     def prepare_addresses emails, names
@@ -40,6 +47,23 @@ module SparkPostRails
     def prepare_address email, index, names
       if !names[index].nil?
         { address:  { email: email, name: names[index] } }
+      else
+        { address: { email: email } }
+      end
+    end
+
+    def prepare_copy_addresses emails, names, header_to
+      emails = [emails] unless emails.is_a?(Array)
+      emails.each_with_index.map {|email, index| prepare_copy_address(email, index, names, header_to) }
+    end
+
+    def prepare_copy_address email, index, names, header_to
+      if !names[index].nil? && !header_to.nil?
+        { address:  { email: email, name: names[index], header_to: header_to } }
+      elsif !names[index].nil?
+        { address:  { email: email, name: names[index] } }
+      elsif !header_to.nil?
+        { address: { email: email, header_to: header_to } }
       else
         { address: { email: email } }
       end
@@ -63,6 +87,17 @@ module SparkPostRails
 
     def prepare_subject_from mail
       @data[:content][:subject] = mail.subject
+    end
+
+    def prepare_cc_headers_from mail
+      if !mail[:cc].nil?
+        copies = prepare_addresses(mail.cc, mail[:cc].display_names)
+        emails = []
+        copies.each do |copy|
+          emails << copy[:address][:email]
+        end
+        @data[:content][:headers] = { cc: emails }
+      end
     end
 
     def prepare_content_from mail
