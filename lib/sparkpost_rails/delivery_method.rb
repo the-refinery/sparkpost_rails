@@ -13,7 +13,7 @@ module SparkPostRails
 
       sparkpost_data = find_sparkpost_data_from mail
 
-      prepare_recipients_from mail
+      prepare_recipients_from mail, sparkpost_data
 
       if sparkpost_data.has_key?(:template_id)
         prepare_template_content_from sparkpost_data
@@ -22,7 +22,7 @@ module SparkPostRails
         prepare_reply_to_address_from mail
 
         prepare_subject_from mail
-        prepare_cc_headers_from mail
+        prepare_cc_headers_from mail, sparkpost_data
         prepare_inline_content_from mail
         prepare_attachments_from mail
       end
@@ -45,14 +45,21 @@ module SparkPostRails
       end
     end
 
-    def prepare_recipients_from mail
-      @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
-      if !mail.cc.nil?
-        @data[:recipients] += prepare_copy_addresses(mail.cc, mail[:cc].display_names, mail.to.first).flatten
+    def prepare_recipients_from mail, sparkpost_data
+      if sparkpost_data.has_key?(:recipient_list_id)
+        @data[:recipients] = {list_id: sparkpost_data[:recipient_list_id]}
+      else
+        @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
+
+        if !mail.cc.nil?
+          @data[:recipients] += prepare_copy_addresses(mail.cc, mail[:cc].display_names, mail.to.first).flatten
+        end
+
+        if !mail.bcc.nil?
+          @data[:recipients] += prepare_copy_addresses(mail.bcc, mail[:bcc].display_names, mail.to.first).flatten
+        end
       end
-      if !mail.bcc.nil?
-        @data[:recipients] += prepare_copy_addresses(mail.bcc, mail[:bcc].display_names, mail.to.first).flatten
-      end
+
     end
 
     def prepare_addresses emails, names
@@ -116,13 +123,15 @@ module SparkPostRails
       @data[:content][:subject] = mail.subject
     end
 
-    def prepare_cc_headers_from mail
-      if !mail[:cc].nil?
+    def prepare_cc_headers_from mail, sparkpost_data
+      if !mail[:cc].nil? && !sparkpost_data.has_key?(:recipient_list_id)
         copies = prepare_addresses(mail.cc, mail[:cc].display_names)
         emails = []
+
         copies.each do |copy|
           emails << copy[:address][:email]
         end
+
         @data[:content][:headers] = { cc: emails }
       end
     end
