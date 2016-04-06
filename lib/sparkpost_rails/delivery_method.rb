@@ -160,8 +160,7 @@ module SparkPostRails
 
       prepare_sandbox_mode_from sparkpost_data
       prepare_open_tracking_from sparkpost_data
-
-      @data[:options][:click_tracking] = SparkPostRails.configuration.track_clicks
+      prepare_click_tracking_from sparkpost_data
 
       unless SparkPostRails.configuration.campaign_id.nil?
         @data[:campaign_id] = SparkPostRails.configuration.campaign_id
@@ -193,7 +192,14 @@ module SparkPostRails
       if sparkpost_data.has_key?(:track_opens)
         @data[:options][:open_tracking] = sparkpost_data[:track_opens]
       end
+    end
 
+    def prepare_click_tracking_from sparkpost_data
+      @data[:options][:click_tracking] = SparkPostRails.configuration.track_clicks
+
+      if sparkpost_data.has_key?(:track_clicks)
+        @data[:options][:click_tracking] = sparkpost_data[:track_clicks]
+      end
     end
 
     def prepare_headers
