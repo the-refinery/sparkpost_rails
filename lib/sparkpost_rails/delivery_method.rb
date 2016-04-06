@@ -22,7 +22,7 @@ module SparkPostRails
       prepare_content_from mail
       prepare_attachments_from mail
 
-      prepare_options_from sparkpost_data
+      prepare_options_from mail, sparkpost_data
       prepare_headers
 
       result = post_to_api
@@ -155,7 +155,7 @@ module SparkPostRails
       end
     end
 
-    def prepare_options_from sparkpost_data
+    def prepare_options_from mail, sparkpost_data
       @data[:options] = {
         :open_tracking => SparkPostRails.configuration.track_opens,
         :click_tracking => SparkPostRails.configuration.track_clicks
