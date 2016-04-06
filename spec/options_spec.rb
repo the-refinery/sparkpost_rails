@@ -8,17 +8,6 @@ describe SparkPostRails::DeliveryMethod do
 
   context "Options" do
 
-    it "handles track_opens option" do
-      SparkPostRails.configure do |c|
-        c.track_opens = true
-      end
-
-      test_email = Mailer.test_email
-      @delivery_method.deliver!(test_email)
-
-      expect(@delivery_method.data[:options][:open_tracking]).to eq(true)
-    end 
-
     it "handles track_clicks option" do
       SparkPostRails.configure do |c|
         c.track_clicks = true

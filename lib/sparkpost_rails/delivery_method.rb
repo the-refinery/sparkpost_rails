@@ -158,7 +158,9 @@ module SparkPostRails
     def prepare_options_from mail, sparkpost_data
       @data[:options] = Hash.new
 
-      @data[:options][:open_tracking] = SparkPostRails.configuration.track_opens
+      prepare_sandbox_mode_from sparkpost_data
+      prepare_open_tracking_from sparkpost_data
+
       @data[:options][:click_tracking] = SparkPostRails.configuration.track_clicks
 
       unless SparkPostRails.configuration.campaign_id.nil?
@@ -169,7 +171,6 @@ module SparkPostRails
         @data[:return_path] = SparkPostRails.configuration.return_path
       end
 
-      prepare_sandbox_mode_from sparkpost_data
     end
 
     def prepare_sandbox_mode_from sparkpost_data
@@ -184,6 +185,15 @@ module SparkPostRails
           @data[:options].delete(:sandbox)
         end
       end
+    end
+
+    def prepare_open_tracking_from sparkpost_data
+      @data[:options][:open_tracking] = SparkPostRails.configuration.track_opens
+
+      if sparkpost_data.has_key?(:track_opens)
+        @data[:options][:open_tracking] = sparkpost_data[:track_opens]
+      end
+
     end
 
     def prepare_headers
