@@ -11,6 +11,8 @@ module SparkPostRails
     def deliver!(mail)
       @data = {content: {}}
 
+      sparkpost_data = find_sparkpost_data_from mail
+
       prepare_recipients_from mail
       prepare_from_address_from mail
       prepare_reply_to_address_from mail
@@ -20,7 +22,7 @@ module SparkPostRails
       prepare_content_from mail
       prepare_attachments_from mail
 
-      prepare_options
+      prepare_options_from sparkpost_data
       prepare_headers
 
       result = post_to_api
@@ -29,6 +31,14 @@ module SparkPostRails
     end
 
   private
+    def find_sparkpost_data_from mail
+      if mail[:sparkpost_data]
+        eval(mail[:sparkpost_data].value)
+      else
+        Hash.new
+      end
+    end
+
     def prepare_recipients_from mail
       @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
       if !mail.cc.nil?
@@ -145,7 +155,7 @@ module SparkPostRails
       end
     end
 
-    def prepare_options
+    def prepare_options_from sparkpost_data
       @data[:options] = {
         :open_tracking => SparkPostRails.configuration.track_opens,
         :click_tracking => SparkPostRails.configuration.track_clicks
@@ -157,6 +167,22 @@ module SparkPostRails
 
       unless SparkPostRails.configuration.return_path.nil?
         @data[:return_path] = SparkPostRails.configuration.return_path
+      end
+
+      prepare_sandbox_mode_from sparkpost_data
+    end
+
+    def prepare_sandbox_mode_from sparkpost_data
+      if SparkPostRails.configuration.sandbox
+        @data[:options][:sandbox] = true
+      end
+
+      if sparkpost_data.has_key?(:sandbox)
+        if sparkpost_data[:sandbox]
+          @data[:options][:sandbox] = sparkpost_data[:sandbox]
+        else
+          @data[:options].delete(:sandbox)
+        end
       end
     end
 
