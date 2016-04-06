@@ -14,13 +14,18 @@ module SparkPostRails
       sparkpost_data = find_sparkpost_data_from mail
 
       prepare_recipients_from mail
-      prepare_from_address_from mail
-      prepare_reply_to_address_from mail
 
-      prepare_subject_from mail
-      prepare_cc_headers_from mail
-      prepare_content_from mail
-      prepare_attachments_from mail
+      if sparkpost_data.has_key?(:template_id)
+        prepare_template_content_from sparkpost_data
+      else
+        prepare_from_address_from mail
+        prepare_reply_to_address_from mail
+
+        prepare_subject_from mail
+        prepare_cc_headers_from mail
+        prepare_inline_content_from mail
+        prepare_attachments_from mail
+      end
 
       prepare_options_from mail, sparkpost_data
       prepare_headers
@@ -59,6 +64,14 @@ module SparkPostRails
         { address:  { email: email, name: names[index] } }
       else
         { address: { email: email } }
+      end
+    end
+
+    def prepare_template_content_from sparkpost_data
+      @data[:content][:template_id] = sparkpost_data[:template_id]
+
+      if sparkpost_data[:substitution_data]
+        @data[:substitution_data] = sparkpost_data[:substitution_data]
       end
     end
 
@@ -110,7 +123,8 @@ module SparkPostRails
       end
     end
 
-    def prepare_content_from mail
+
+    def prepare_inline_content_from mail
       if mail.multipart?
         if mail.html_part
           @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
