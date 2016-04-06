@@ -27,6 +27,7 @@ module SparkPostRails
         prepare_attachments_from mail
       end
 
+      prepare_substitution_data_from sparkpost_data
       prepare_options_from mail, sparkpost_data
       prepare_headers
 
@@ -67,14 +68,6 @@ module SparkPostRails
       end
     end
 
-    def prepare_template_content_from sparkpost_data
-      @data[:content][:template_id] = sparkpost_data[:template_id]
-
-      if sparkpost_data[:substitution_data]
-        @data[:substitution_data] = sparkpost_data[:substitution_data]
-      end
-    end
-
     def prepare_copy_addresses emails, names, header_to
       emails = [emails] unless emails.is_a?(Array)
       emails.each_with_index.map {|email, index| prepare_copy_address(email, index, names, header_to) }
@@ -89,6 +82,17 @@ module SparkPostRails
         { address: { email: email, header_to: header_to } }
       else
         { address: { email: email } }
+      end
+    end
+
+    def prepare_template_content_from sparkpost_data
+      @data[:content][:template_id] = sparkpost_data[:template_id]
+
+    end
+
+    def prepare_substitution_data_from sparkpost_data
+      if sparkpost_data[:substitution_data]
+        @data[:substitution_data] = sparkpost_data[:substitution_data]
       end
     end
 
