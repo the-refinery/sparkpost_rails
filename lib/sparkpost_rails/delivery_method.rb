@@ -156,10 +156,10 @@ module SparkPostRails
     end
 
     def prepare_options_from mail, sparkpost_data
-      @data[:options] = {
-        :open_tracking => SparkPostRails.configuration.track_opens,
-        :click_tracking => SparkPostRails.configuration.track_clicks
-      }
+      @data[:options] = Hash.new
+
+      @data[:options][:open_tracking] = SparkPostRails.configuration.track_opens
+      @data[:options][:click_tracking] = SparkPostRails.configuration.track_clicks
 
       unless SparkPostRails.configuration.campaign_id.nil?
         @data[:campaign_id] = SparkPostRails.configuration.campaign_id
