@@ -7,7 +7,7 @@ describe SparkPostRails::DeliveryMethod do
   end
 
   context "Skip Suppression" do
-    it "handles skip_suppression value from message" do
+    it "handles value from message" do
       test_email = Mailer.test_email sparkpost_data: {skip_suppression: true}
 
       @delivery_method.deliver!(test_email)
@@ -15,7 +15,7 @@ describe SparkPostRails::DeliveryMethod do
       expect(@delivery_method.data[:options][:skip_suppression]).to eq(true)
     end
 
-    it "does not include substitution data element if none is passed" do
+    it "does not include skip_suppression element if not supplied" do
       test_email = Mailer.test_email
       @delivery_method.deliver!(test_email)
 
