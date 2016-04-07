@@ -189,10 +189,7 @@ module SparkPostRails
       prepare_open_tracking_from sparkpost_data
       prepare_click_tracking_from sparkpost_data
       prepare_campaign_id_from sparkpost_data
-
-      unless SparkPostRails.configuration.return_path.nil?
-        @data[:return_path] = SparkPostRails.configuration.return_path
-      end
+      prepare_return_path_from mail
 
     end
 
@@ -235,6 +232,18 @@ module SparkPostRails
 
       if campaign_id
         @data[:campaign_id] = campaign_id
+      end
+    end
+
+    def prepare_return_path_from mail
+      return_path = SparkPostRails.configuration.return_path
+
+      unless mail.return_path.nil?
+        return_path = mail.return_path
+      end
+
+      if return_path
+        @data[:return_path] = return_path
       end
     end
 
