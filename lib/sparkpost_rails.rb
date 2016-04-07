@@ -22,6 +22,7 @@ module SparkPostRails
     attr_accessor :campaign_id
     attr_accessor :return_path
 
+    attr_accessor :transactional
 
     def initialize
       set_defaults
@@ -41,6 +42,8 @@ module SparkPostRails
 
       @campaign_id = nil
       @return_path = nil
+
+      @transactional = false
     end
   end
 end
