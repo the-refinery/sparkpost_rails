@@ -190,7 +190,7 @@ module SparkPostRails
       prepare_click_tracking_from sparkpost_data
       prepare_campaign_id_from sparkpost_data
       prepare_return_path_from mail
-
+      prepare_transactional_from sparkpost_data
     end
 
     def prepare_sandbox_mode_from sparkpost_data
@@ -244,6 +244,14 @@ module SparkPostRails
 
       if return_path
         @data[:return_path] = return_path
+      end
+    end
+
+    def prepare_transactional_from sparkpost_data
+      @data[:options][:transactional] = SparkPostRails.configuration.transactional
+
+      if sparkpost_data.has_key?(:transactional)
+        @data[:options][:transactional] = sparkpost_data[:transactional]
       end
     end
 
