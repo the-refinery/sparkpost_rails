@@ -11,16 +11,24 @@ module SparkPostRails
     def deliver!(mail)
       @data = {content: {}}
 
-      prepare_recipients_from mail
-      prepare_from_address_from mail
-      prepare_reply_to_address_from mail
+      sparkpost_data = find_sparkpost_data_from mail
 
-      prepare_subject_from mail
-      prepare_cc_headers_from mail
-      prepare_content_from mail
-      prepare_attachments_from mail
+      prepare_recipients_from mail, sparkpost_data
 
-      prepare_options
+      if sparkpost_data.has_key?(:template_id)
+        prepare_template_content_from sparkpost_data
+      else
+        prepare_from_address_from mail
+        prepare_reply_to_address_from mail
+
+        prepare_subject_from mail
+        prepare_cc_headers_from mail, sparkpost_data
+        prepare_inline_content_from mail
+        prepare_attachments_from mail
+      end
+
+      prepare_substitution_data_from sparkpost_data
+      prepare_options_from mail, sparkpost_data
       prepare_headers
 
       result = post_to_api
@@ -29,14 +37,29 @@ module SparkPostRails
     end
 
   private
-    def prepare_recipients_from mail
-      @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
-      if !mail.cc.nil?
-        @data[:recipients] += prepare_copy_addresses(mail.cc, mail[:cc].display_names, mail.to.first).flatten
+    def find_sparkpost_data_from mail
+      if mail[:sparkpost_data]
+        eval(mail[:sparkpost_data].value)
+      else
+        Hash.new
       end
-      if !mail.bcc.nil?
-        @data[:recipients] += prepare_copy_addresses(mail.bcc, mail[:bcc].display_names, mail.to.first).flatten
+    end
+
+    def prepare_recipients_from mail, sparkpost_data
+      if sparkpost_data.has_key?(:recipient_list_id)
+        @data[:recipients] = {list_id: sparkpost_data[:recipient_list_id]}
+      else
+        @data[:recipients] = prepare_addresses(mail.to, mail[:to].display_names)
+
+        if !mail.cc.nil?
+          @data[:recipients] += prepare_copy_addresses(mail.cc, mail[:cc].display_names, mail.to.first).flatten
+        end
+
+        if !mail.bcc.nil?
+          @data[:recipients] += prepare_copy_addresses(mail.bcc, mail[:bcc].display_names, mail.to.first).flatten
+        end
       end
+
     end
 
     def prepare_addresses emails, names
@@ -69,6 +92,17 @@ module SparkPostRails
       end
     end
 
+    def prepare_template_content_from sparkpost_data
+      @data[:content][:template_id] = sparkpost_data[:template_id]
+
+    end
+
+    def prepare_substitution_data_from sparkpost_data
+      if sparkpost_data[:substitution_data]
+        @data[:substitution_data] = sparkpost_data[:substitution_data]
+      end
+    end
+
     def prepare_from_address_from mail
       if !mail[:from].display_names.first.nil?
         from = { email: mail.from.first, name: mail[:from].display_names.first }
@@ -89,18 +123,21 @@ module SparkPostRails
       @data[:content][:subject] = mail.subject
     end
 
-    def prepare_cc_headers_from mail
-      if !mail[:cc].nil?
+    def prepare_cc_headers_from mail, sparkpost_data
+      if !mail[:cc].nil? && !sparkpost_data.has_key?(:recipient_list_id)
         copies = prepare_addresses(mail.cc, mail[:cc].display_names)
         emails = []
+
         copies.each do |copy|
           emails << copy[:address][:email]
         end
+
         @data[:content][:headers] = { cc: emails }
       end
     end
 
-    def prepare_content_from mail
+
+    def prepare_inline_content_from mail
       if mail.multipart?
         if mail.html_part
           @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
@@ -145,18 +182,68 @@ module SparkPostRails
       end
     end
 
-    def prepare_options
-      @data[:options] = {
-        :open_tracking => SparkPostRails.configuration.track_opens,
-        :click_tracking => SparkPostRails.configuration.track_clicks
-      }
+    def prepare_options_from mail, sparkpost_data
+      @data[:options] = Hash.new
 
-      unless SparkPostRails.configuration.campaign_id.nil?
-        @data[:campaign_id] = SparkPostRails.configuration.campaign_id
+      prepare_sandbox_mode_from sparkpost_data
+      prepare_open_tracking_from sparkpost_data
+      prepare_click_tracking_from sparkpost_data
+      prepare_campaign_id_from sparkpost_data
+      prepare_return_path_from mail
+
+    end
+
+    def prepare_sandbox_mode_from sparkpost_data
+      if SparkPostRails.configuration.sandbox
+        @data[:options][:sandbox] = true
       end
 
-      unless SparkPostRails.configuration.return_path.nil?
-        @data[:return_path] = SparkPostRails.configuration.return_path
+      if sparkpost_data.has_key?(:sandbox)
+        if sparkpost_data[:sandbox]
+          @data[:options][:sandbox] = sparkpost_data[:sandbox]
+        else
+          @data[:options].delete(:sandbox)
+        end
+      end
+    end
+
+    def prepare_open_tracking_from sparkpost_data
+      @data[:options][:open_tracking] = SparkPostRails.configuration.track_opens
+
+      if sparkpost_data.has_key?(:track_opens)
+        @data[:options][:open_tracking] = sparkpost_data[:track_opens]
+      end
+    end
+
+    def prepare_click_tracking_from sparkpost_data
+      @data[:options][:click_tracking] = SparkPostRails.configuration.track_clicks
+
+      if sparkpost_data.has_key?(:track_clicks)
+        @data[:options][:click_tracking] = sparkpost_data[:track_clicks]
+      end
+    end
+
+    def prepare_campaign_id_from sparkpost_data
+      campaign_id = SparkPostRails.configuration.campaign_id
+
+      if sparkpost_data.has_key?(:campaign_id)
+        campaign_id = sparkpost_data[:campaign_id]
+      end
+
+      if campaign_id
+        @data[:campaign_id] = campaign_id
+      end
+    end
+
+    def prepare_return_path_from mail
+      return_path = SparkPostRails.configuration.return_path
+
+      unless mail.return_path.nil?
+        return_path = mail.return_path
+      end
+
+      if return_path
+        @data[:return_path] = return_path
       end
     end
 

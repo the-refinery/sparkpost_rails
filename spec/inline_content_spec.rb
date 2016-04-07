@@ -6,7 +6,7 @@ describe SparkPostRails::DeliveryMethod do
     @delivery_method = SparkPostRails::DeliveryMethod.new
   end
 
-  context "Content" do
+  context "Inline Content" do
     it "sets the subject" do
       test_email = Mailer.test_email
       @delivery_method.deliver!(test_email)
@@ -28,6 +28,14 @@ describe SparkPostRails::DeliveryMethod do
 
       expect(@delivery_method.data[:content][:text]).to eq("Hello, Testing!")
       expect(@delivery_method.data[:content][:html]).to eq("<h1>Hello, Testing!</h1>")
+    end
+
+    it "should not include template details" do
+      test_email = Mailer.test_email
+      @delivery_method.deliver!(test_email)
+
+      expect(@delivery_method.data[:content].has_key?(:template_id)).to eq(false)
+      expect(@delivery_method.data[:content].has_key?(:use_draft_template)).to eq(false)
     end
   end
 end

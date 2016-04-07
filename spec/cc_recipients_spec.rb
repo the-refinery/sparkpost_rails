@@ -29,7 +29,7 @@ describe SparkPostRails::DeliveryMethod do
       it "handles email only" do
         test_email = Mailer.test_email cc: "cc1@example.com, cc2@example.com"
         @delivery_method.deliver!(test_email)
-        
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to@example.com"}}, {address: {email: "cc1@example.com", header_to: "to@example.com"}}, {address: {email: "cc2@example.com", header_to: "to@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
       end
@@ -37,7 +37,7 @@ describe SparkPostRails::DeliveryMethod do
       it "handles name and email" do
         test_email = Mailer.test_email to: "Joe Test <to@example.com>", cc: "Carl Test <cc1@example.com>, Chris Test <cc2@example.com>"
         @delivery_method.deliver!(test_email)
-        
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to@example.com", name: "Joe Test"}}, {address: {email: "cc1@example.com", name: "Carl Test", header_to: "to@example.com"}}, {address: {email: "cc2@example.com", name: "Chris Test", header_to: "to@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
       end
@@ -55,7 +55,7 @@ describe SparkPostRails::DeliveryMethod do
       it "handles email only" do
         test_email = Mailer.test_email to: "to1@example.com, to2@example.com", cc: "cc@example.com"
         @delivery_method.deliver!(test_email)
-        
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to1@example.com"}}, {address: {email: "to2@example.com"}}, {address: {email: "cc@example.com", header_to: "to1@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
       end
@@ -63,7 +63,7 @@ describe SparkPostRails::DeliveryMethod do
       it "handles name and email" do
         test_email = Mailer.test_email to: "Joe Test <to1@example.com>, Sam Test <to2@example.com>", cc: "Carl Test <cc@example.com>"
         @delivery_method.deliver!(test_email)
-        
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to1@example.com", name: "Joe Test"}}, {address: {email: "to2@example.com", name: "Sam Test"}}, {address: {email: "cc@example.com", name: "Carl Test", header_to: "to1@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
       end
@@ -73,7 +73,7 @@ describe SparkPostRails::DeliveryMethod do
       it "handles email only" do
         test_email = Mailer.test_email to: "to1@example.com, to2@example.com", cc: "cc1@example.com, cc2@example.com"
         @delivery_method.deliver!(test_email)
-        
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to1@example.com"}}, {address: {email: "to2@example.com"}}, {address: {email: "cc1@example.com", header_to: "to1@example.com"}}, {address: {email: "cc2@example.com", header_to: "to1@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
       end
@@ -81,7 +81,7 @@ describe SparkPostRails::DeliveryMethod do
       it "handles name and email" do
         test_email = Mailer.test_email to: "Joe Test <to1@example.com>, Sam Test <to2@example.com>", cc: "Carl Test <cc1@example.com>, Chris Test <cc2@example.com>"
         @delivery_method.deliver!(test_email)
-        
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to1@example.com", name: "Joe Test"}}, {address: {email: "to2@example.com", name: "Sam Test"}}, {address: {email: "cc1@example.com", name: "Carl Test", header_to: "to1@example.com"}}, {address: {email: "cc2@example.com", name: "Chris Test", header_to: "to1@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
       end
@@ -89,7 +89,7 @@ describe SparkPostRails::DeliveryMethod do
       it "handles mix of email only and name/email for to recipients" do
         test_email = Mailer.test_email to: "Joe Test <to1@example.com>, to2@example.com", cc: "cc1@example.com, Chris Test <cc2@example.com>"
         @delivery_method.deliver!(test_email)
-        
+
         expect(@delivery_method.data[:recipients]).to eq([{address: {email: "to1@example.com", name: "Joe Test"}}, {address: {email: "to2@example.com"}}, {address: {email: "cc1@example.com", header_to: "to1@example.com"}}, {address: {email: "cc2@example.com", name: "Chris Test", header_to: "to1@example.com"}}])
         expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
       end
