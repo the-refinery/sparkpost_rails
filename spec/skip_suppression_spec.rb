@@ -6,7 +6,7 @@ describe SparkPostRails::DeliveryMethod do
     @delivery_method = SparkPostRails::DeliveryMethod.new
   end
 
-  context "Substitution Data" do
+  context "Skip Suppression" do
     it "handles skip_suppression value from message" do
       test_email = Mailer.test_email sparkpost_data: {skip_suppression: true}
 

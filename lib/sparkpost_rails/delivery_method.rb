@@ -192,6 +192,7 @@ module SparkPostRails
       prepare_return_path_from mail
       prepare_transactional_from sparkpost_data
       prepare_skip_suppression_from sparkpost_data
+      prepare_ip_pool_from sparkpost_data
     end
 
     def prepare_sandbox_mode_from sparkpost_data
@@ -260,6 +261,19 @@ module SparkPostRails
     def prepare_skip_suppression_from sparkpost_data
       if sparkpost_data[:skip_suppression]
         @data[:options][:skip_suppression] = sparkpost_data[:skip_suppression]
+      end
+    end
+
+
+    def prepare_ip_pool_from sparkpost_data
+      ip_pool = SparkPostRails.configuration.ip_pool
+
+      if sparkpost_data.has_key?(:ip_pool)
+        ip_pool = sparkpost_data[:ip_pool]
+      end
+
+      if ip_pool
+        @data[:options][:ip_pool] = ip_pool
       end
     end
 

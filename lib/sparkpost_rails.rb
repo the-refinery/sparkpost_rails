@@ -23,6 +23,7 @@ module SparkPostRails
     attr_accessor :return_path
 
     attr_accessor :transactional
+    attr_accessor :ip_pool
 
     def initialize
       set_defaults
@@ -44,6 +45,7 @@ module SparkPostRails
       @return_path = nil
 
       @transactional = false
+      @ip_pool = nil
     end
   end
 end
