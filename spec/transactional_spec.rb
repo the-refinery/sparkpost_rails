@@ -39,11 +39,11 @@ describe SparkPostRails::DeliveryMethod do
       expect(@delivery_method.data[:options][:transactional]).to eq(false)
     end
 
-    it "handles a default setting of none" do
+    it "handles unset value" do
       test_email = Mailer.test_email
       @delivery_method.deliver!(test_email)
 
-      expect(@delivery_method.data[:options].has_key?(:trasactional)).to eq(false)
+      expect(@delivery_method.data[:options][:transactional]).to eq(false)
     end
 
   end
