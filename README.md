@@ -121,7 +121,7 @@ to your sparkpost_data hash, with the key :substitution_data.
 
 ```
 sub_data = {first_name: "Sam",
-            last_name: "Test}
+            last_name: "Test"}
 
 data = { substitution_data: sub_data }
 
