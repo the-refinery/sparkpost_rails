@@ -28,6 +28,7 @@ module SparkPostRails
       end
 
       prepare_substitution_data_from sparkpost_data
+      prepare_description_from sparkpost_data
       prepare_options_from mail, sparkpost_data
       prepare_headers_from sparkpost_data
 
@@ -164,7 +165,7 @@ module SparkPostRails
         #Base64 encoded without line breaks as required by the API.
         attachment_data = { name: attachment.filename,
                             type: attachment.content_type,
-                            data: Base64.encode64(attachment.body.decoded).gsub("\n","") }
+                            data: Base64.strict_encode64(attachment.body.decoded) }
 
         if attachment.inline?
           inline_images << attachment_data
@@ -265,6 +266,11 @@ module SparkPostRails
       end
     end
 
+    def prepare_description_from sparkpost_data
+      if sparkpost_data[:description]
+        @data[:description] = sparkpost_data[:description].truncate(1024)
+      end
+    end
 
     def prepare_ip_pool_from sparkpost_data
       ip_pool = SparkPostRails.configuration.ip_pool

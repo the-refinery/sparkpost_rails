@@ -45,6 +45,8 @@ SparkPostRails.configure do |c|
   c.track_clicks = true
   c.return_path = 'BOUNCE-EMAIL@YOUR-DOMAIN.COM'
   c.campaign_id = 'YOUR-CAMPAIGN'
+  c.transactional = true
+  c.ip_pool = "MY-POOL"
 end
 ```
 
@@ -56,6 +58,8 @@ track_opens = false
 track_clicks = false
 return_path = nil
 campaign_id = nil
+transactional = false
+ip_pool = nil
 ```
 
 Usage
@@ -90,7 +94,9 @@ to the mail message in a field named "sparkpost_data":
 ```
 data = { track_opens: true,
          track_clicks: false,
-         campaign_id: "My Campaign"}
+         campaign_id: "My Campaign",
+         transactional: true,
+         ip_pool = "SPECIAL_POOL"}
 
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
@@ -101,6 +107,33 @@ Additionally, return_path can be overriden on a specific email by setting that f
 mail(to: to_email, subject: "Test", body: "test", return_path: "bounces@example.com")
 ```
 
+### Transmission Specific Settings
+
+For an individual transmisison you can specifiy that SparkPost should ignore customer supression rules - if your SparkPost account allows for this 
+feature.  Simply include the flag in the "sparkpost_data" field on the message:
+
+```
+data = { skip_suppression: true }
+
+mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
+```
+
+To schedule the generation of messages for a future date and time, specify a start time in the "sparkpost_data":
+
+```
+data = { start_time: DateTime.now + 4.hours }
+
+mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
+```
+
+You can set a description for a transmission via the "sparkpost_data" as well.  The maximum length of the decription is 1024 characters - values
+longer than the maxium will be truncated.
+
+```
+data = { description: "My Important Message" }
+
+mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
+```
 
 ### Recipient Lists
 SparkPostRails supports using SparkPost stored recipient lists.  Simply add the list_id to the sparkpost_data hash on the mail message:
