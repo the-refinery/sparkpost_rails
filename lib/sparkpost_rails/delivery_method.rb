@@ -194,7 +194,7 @@ module SparkPostRails
       prepare_transactional_from sparkpost_data
       prepare_skip_suppression_from sparkpost_data
       prepare_ip_pool_from sparkpost_data
-      prepare_delivery_schedule_from sparkpost_data
+      prepare_delivery_schedule_from mail
     end
 
     def prepare_sandbox_mode_from sparkpost_data
@@ -284,19 +284,11 @@ module SparkPostRails
       end
     end
 
-    def prepare_delivery_schedule_from sparkpost_data
-      if sparkpost_data[:start_time]
-        @data[:options][:start_time] = sparkpost_data[:start_time]
+    def prepare_delivery_schedule_from mail
+      # Format YYYY-MM-DDTHH:MM:SS+-HH:MM or "now". Example: '2015-02-11T08:00:00-04:00'. -From SparkPost API Docs
+      if mail.date && (mail.date > DateTime.now) && (mail.date < (DateTime.now + 1.year))
+        @data[:options][:start_time] = mail.date.strftime("%Y-%m-%dT%H:%M:%S%:z")
       end
-
-      # if sparkpost_data.has_key?(:start_time)
-      #   if sparkpost_data[:start_time].class == DateTime
-      #     start_time = sparkpost_data[:start_time]
-      #     if (start_time > DateTime.now) && (start_time < DateTime.one_year_from_now)
-      #       @data[:options][:start_time] = start_time.to_s
-      #     end
-      #   end
-      # end
     end
 
     def prepare_headers_from sparkpost_data
