@@ -326,8 +326,8 @@ module SparkPostRails
     end
 
     def prepare_api_headers_from sparkpost_data
-      if sparkpost_data.has_key?(:subaccount_api_key)
-        api_key = sparkpost_data[:subaccount_api_key]
+      if sparkpost_data.has_key?(:api_key)
+        api_key = sparkpost_data[:api_key]
       else
         api_key = SparkPostRails.configuration.api_key
       end

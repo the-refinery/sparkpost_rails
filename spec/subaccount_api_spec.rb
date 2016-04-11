@@ -7,19 +7,19 @@ describe SparkPostRails::DeliveryMethod do
     @delivery_method = SparkPostRails::DeliveryMethod.new
   end
 
-  context "Subaccount API Key" do
-    it "uses supplied subaccount key instead of default API key" do
+  context "Message-Specific API Key" do
+    it "uses supplied API key instead of default" do
       SparkPostRails.configure do |c|
         c.api_key = 'NEW_DEFAULT_API_KEY'
       end
 
-      test_email = Mailer.test_email sparkpost_data: {subaccount_api_key: 'SUBACCOUNT_API_KEY'}
+      test_email = Mailer.test_email sparkpost_data: {api_key: 'SUBACCOUNT_API_KEY'}
       @delivery_method.deliver!(test_email)
 
       expect(@delivery_method.headers).to include("Authorization" => "SUBACCOUNT_API_KEY")
     end
 
-    it "uses default API if no subaccount API key applied" do
+    it "uses default API if no message-specific API key applied" do
       SparkPostRails.configure do |c|
         c.api_key = 'NEW_DEFAULT_API_KEY'
       end
@@ -58,7 +58,7 @@ describe SparkPostRails::DeliveryMethod do
       SparkPostRails.configure do |c|
         c.subaccount = 123
       end
-      
+
       test_email = Mailer.test_email sparkpost_data: {subaccount: 456}
       @delivery_method.deliver!(test_email)
 
