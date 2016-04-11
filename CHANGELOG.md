@@ -7,7 +7,7 @@
 * Start Time (scheduled / delayed generation) support
 * Support for setting the Description of a transmission
 * Support for setting additional header info
-
+* Bug fix on name vs. URL for inline images
 
 1.1.0
 =====
