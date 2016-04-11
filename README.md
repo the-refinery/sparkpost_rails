@@ -96,7 +96,9 @@ data = { track_opens: true,
          track_clicks: false,
          campaign_id: "My Campaign",
          transactional: true,
-         ip_pool = "SPECIAL_POOL"}
+         ip_pool = "SPECIAL_POOL",
+         subaccount_api_key = "SUBACCOUNT_API_KEY"
+       }
 
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
@@ -118,12 +120,12 @@ data = { skip_suppression: true }
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
 
-To schedule the generation of messages for a future date and time, specify a start time in the "sparkpost_data":
+To schedule the generation of messages for a future date and time, specify a start time in the date parameter of the mail. Date must be in the future and less than 1 year from today. If date is in the past or too far in the future, no date will be passed, and no delivery schedule will be set.
 
 ```
-data = { start_time: DateTime.now + 4.hours }
+start_time = DateTime.now + 4.hours 
 
-mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
+mail(to: to_email, subject: "Test", body: "test", date: start_time)
 ```
 
 You can set a description for a transmission via the "sparkpost_data" as well.  The maximum length of the decription is 1024 characters - values
