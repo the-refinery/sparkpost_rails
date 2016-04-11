@@ -336,6 +336,16 @@ module SparkPostRails
         "Authorization" => api_key,
         "Content-Type"  => "application/json"
       }
+
+      if sparkpost_data.has_key?(:subaccount)
+        subaccount = sparkpost_data[:subaccount]
+      else
+        subaccount = SparkPostRails.configuration.subaccount
+      end
+
+      if subaccount
+        @headers["X-MSYS-SUBACCOUNT"] = subaccount.to_s
+      end
     end
 
     def post_to_api
