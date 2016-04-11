@@ -267,7 +267,7 @@ module SparkPostRails
 
     def prepare_description_from sparkpost_data
       if sparkpost_data[:description]
-        @data[:description] = sparkpost_data[:description]
+        @data[:description] = sparkpost_data[:description].truncate(1024)
       end
     end
 

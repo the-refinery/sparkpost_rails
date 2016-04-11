@@ -126,7 +126,8 @@ data = { start_time: DateTime.now + 4.hours }
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
 
-You can set a description for a transmission via the "sparkpost_data" as well:
+You can set a description for a transmission via the "sparkpost_data" as well.  The maximum length of the decription is 1024 characters - values
+longer than the maxium will be truncated.
 
 ```
 data = { description: "My Important Message" }
