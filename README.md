@@ -176,6 +176,17 @@ mail(to: to_email, sparkpost_data: data)
 **NOTE**: All inline-content that may exist in your mail message will be ignored, as the SparkPost API does not accept that data when a template id is 
 supplied.  This includes Subject, From, ReplyTo, Attachments, and Inline Images.
 
+###Other Mail Headers
+If you need to identify custom mail headers for your messages, utilize the ActionMailer header[] method.  The gem will pass all approprite headers through 
+to the api.  Note, per the SparkPost API documentation, "Headers such as 'Content-Type' and 'Content-Transfer-Encoding' are not allowed here as they are auto 
+generated upon construction of the email."
+
+```
+headers["Priority"] = "urgent"
+headers["Sensitivity"] = "private"
+
+mail(to: to_email, subject: "Test", body: "test")
+```
 
 Update Note!
 ============

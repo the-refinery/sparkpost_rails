@@ -30,7 +30,9 @@ module SparkPostRails
       prepare_substitution_data_from sparkpost_data
       prepare_description_from sparkpost_data
       prepare_options_from mail, sparkpost_data
-      prepare_headers_from sparkpost_data
+      prepare_additional_mail_headers_from mail
+
+      prepare_api_headers_from sparkpost_data
 
       result = post_to_api
 
@@ -291,7 +293,39 @@ module SparkPostRails
       end
     end
 
-    def prepare_headers_from sparkpost_data
+    def prepare_additional_mail_headers_from mail
+      valid_headers = Hash.new
+
+      invalid_names = ["sparkpost-data",
+                       "from",
+                       "to",
+                       "cc",
+                       "bcc",
+                       "subject",
+                       "reply-to",
+                       "return-path",
+                       "date",
+                       "mime-version",
+                       "content-type",
+                       "content-transfer-encoding",
+                       "text-part"]
+
+      mail.header.fields.each do |field|
+        unless invalid_names.include?(field.name.downcase)
+          valid_headers[field.name] = field.value
+        end
+      end
+
+      if valid_headers.count > 0
+        unless @data[:content].has_key?(:headers)
+          @data[:content][:headers] = Hash.new
+        end
+
+        @data[:content][:headers].merge!(valid_headers)
+      end
+    end
+
+    def prepare_api_headers_from sparkpost_data
       if sparkpost_data.has_key?(:subaccount_api_key)
         api_key = sparkpost_data[:subaccount_api_key]
       else
