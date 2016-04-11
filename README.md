@@ -126,6 +126,13 @@ data = { start_time: DateTime.now + 4.hours }
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
 
+You can set a description for a transmission via the "sparkpost_data" as well:
+
+```
+data = { description: "My Important Message" }
+
+mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
+```
 
 ### Recipient Lists
 SparkPostRails supports using SparkPost stored recipient lists.  Simply add the list_id to the sparkpost_data hash on the mail message:
