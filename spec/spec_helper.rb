@@ -52,6 +52,14 @@ class Mailer < ActionMailer::Base
       options.delete(:inline_attachments)
     end
 
+    if options.has_key?(:headers)
+      if options[:headers].class == Hash
+        headers options[:headers]
+      end
+
+      options.delete(:headers)
+    end
+
     data.merge! options
 
     if data.has_key?(:html_part)
