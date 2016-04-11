@@ -2,7 +2,7 @@ module SparkPostRails
   class DeliveryMethod
     require 'net/http'
 
-    attr_accessor :settings, :data, :response
+    attr_accessor :settings, :data, :response, :headers
 
     def initialize(options = {})
       @settings = options
@@ -29,7 +29,7 @@ module SparkPostRails
 
       prepare_substitution_data_from sparkpost_data
       prepare_options_from mail, sparkpost_data
-      prepare_headers
+      prepare_headers_from sparkpost_data
 
       result = post_to_api
 
@@ -193,6 +193,7 @@ module SparkPostRails
       prepare_transactional_from sparkpost_data
       prepare_skip_suppression_from sparkpost_data
       prepare_ip_pool_from sparkpost_data
+      prepare_delivery_schedule_from sparkpost_data
     end
 
     def prepare_sandbox_mode_from sparkpost_data
@@ -277,9 +278,30 @@ module SparkPostRails
       end
     end
 
-    def prepare_headers
+    def prepare_delivery_schedule_from sparkpost_data
+      if sparkpost_data[:start_time]
+        @data[:options][:start_time] = sparkpost_data[:start_time]
+      end
+
+      # if sparkpost_data.has_key?(:start_time)
+      #   if sparkpost_data[:start_time].class == DateTime
+      #     start_time = sparkpost_data[:start_time]
+      #     if (start_time > DateTime.now) && (start_time < DateTime.one_year_from_now)
+      #       @data[:options][:start_time] = start_time.to_s
+      #     end
+      #   end
+      # end
+    end
+
+    def prepare_headers_from sparkpost_data
+      if sparkpost_data.has_key?(:subaccount_api_key)
+        api_key = sparkpost_data[:subaccount_api_key]
+      else
+        api_key = SparkPostRails.configuration.api_key
+      end
+
       @headers = {
-        "Authorization" => SparkPostRails.configuration.api_key,
+        "Authorization" => api_key,
         "Content-Type"  => "application/json"
       }
     end
