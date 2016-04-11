@@ -28,6 +28,7 @@ module SparkPostRails
       end
 
       prepare_substitution_data_from sparkpost_data
+      prepare_description_from sparkpost_data
       prepare_options_from mail, sparkpost_data
       prepare_headers
 
@@ -264,6 +265,11 @@ module SparkPostRails
       end
     end
 
+    def prepare_description_from sparkpost_data
+      if sparkpost_data[:description]
+        @data[:description] = sparkpost_data[:description]
+      end
+    end
 
     def prepare_ip_pool_from sparkpost_data
       ip_pool = SparkPostRails.configuration.ip_pool
