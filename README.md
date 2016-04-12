@@ -47,6 +47,7 @@ SparkPostRails.configure do |c|
   c.campaign_id = 'YOUR-CAMPAIGN'
   c.transactional = true
   c.ip_pool = "MY-POOL"
+  c.subaccount = "123"
 end
 ```
 
@@ -60,6 +61,7 @@ return_path = nil
 campaign_id = nil
 transactional = false
 ip_pool = nil
+subaccount = nil
 ```
 
 Usage
@@ -97,7 +99,8 @@ data = { track_opens: true,
          campaign_id: "My Campaign",
          transactional: true,
          ip_pool = "SPECIAL_POOL",
-         subaccount_api_key = "SUBACCOUNT_API_KEY"
+         api_key = "MESSAGE_SPECIFIC_API_KEY"
+         subaccount = "123"
        }
 
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
@@ -135,6 +138,23 @@ longer than the maxium will be truncated.
 data = { description: "My Important Message" }
 
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
+```
+
+### Subaccounts
+SparkPostRails supports sending messages via subaccounts in two ways. The default API key set in the configuration can be overriden on a message-by-message basis with a subaccount API key.
+
+```
+data = { api_key: "SUBACCOUNT_API_KEY" }
+
+mail(subject: "Test", body: "test", sparkpost_data: data)
+```
+
+Subaccounts can also be leveraged using the subaccount ID with the master API key.
+
+```
+data = { subaccount: "123" }
+
+mail(subject: "Test", body: "test", sparkpost_data: data)
 ```
 
 ### Recipient Lists
