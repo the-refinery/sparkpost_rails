@@ -1,4 +1,4 @@
 module SparkPostRails
-  class DeliveryException < Exception
+  class DeliveryException < StandardError
   end
 end
