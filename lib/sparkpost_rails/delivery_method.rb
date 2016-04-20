@@ -28,6 +28,7 @@ module SparkPostRails
       end
 
       prepare_substitution_data_from sparkpost_data
+      prepare_metadata_from sparkpost_data
       prepare_description_from sparkpost_data
       prepare_options_from mail, sparkpost_data
       prepare_additional_mail_headers_from mail
@@ -103,6 +104,12 @@ module SparkPostRails
     def prepare_substitution_data_from sparkpost_data
       if sparkpost_data[:substitution_data]
         @data[:substitution_data] = sparkpost_data[:substitution_data]
+      end
+    end
+    
+    def prepare_metadata_from sparkpost_data
+      if sparkpost_data[:metadata]
+        @data[:metadata] = sparkpost_data[:metadata]
       end
     end
 
