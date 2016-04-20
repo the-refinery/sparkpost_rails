@@ -175,10 +175,23 @@ You can leverage SparkPost's substitution engine through the gem as well.  To su
 to your sparkpost_data hash, with the key :substitution_data.
 
 ```
-sub_data = {first_name: "Sam",
-            last_name: "Test}
+sub_data = { first_name: "Sam",
+             last_name: "Test }
 
 data = { substitution_data: sub_data }
+
+mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
+```
+
+### Metadata
+You can leverage SparkPost's metadata engine through the gem as well.  To supply metadata, simply add your hash of substitution data
+to your sparkpost_data hash, with the key :metadata.
+
+```
+metadata = { message_type: "Newsletter",
+             reference: "abcd" }
+
+data = { metadata: metadata }
 
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
