@@ -196,6 +196,7 @@ module SparkPostRails
       prepare_transactional_from sparkpost_data
       prepare_skip_suppression_from sparkpost_data
       prepare_ip_pool_from sparkpost_data
+      prepare_inline_css_from sparkpost_data
       prepare_delivery_schedule_from mail
     end
 
@@ -283,6 +284,14 @@ module SparkPostRails
 
       if ip_pool
         @data[:options][:ip_pool] = ip_pool
+      end
+    end
+
+    def prepare_inline_css_from sparkpost_data
+      @data[:options][:inline_css] = SparkPostRails.configuration.inline_css
+
+      if sparkpost_data.has_key?(:inline_css)
+        @data[:options][:inline_css] = sparkpost_data[:inline_css]
       end
     end
 
