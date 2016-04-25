@@ -142,6 +142,15 @@ data = { description: "My Important Message" }
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
 
+By default, content from single-part messages is sent at plain-text.  If you are only intending to send HTML email, with no plain-text part, you can specify this 
+as shown below:
+
+```
+data = { html_content_only: true }
+
+mail(to: to_email, subject: "Test", body: "<h1>test</h1>", sparkpost_data: data)
+```
+
 ### Subaccounts
 SparkPostRails supports sending messages via subaccounts in two ways. The default API key set in the configuration can be overriden on a message-by-message basis with a subaccount API key.
 
@@ -209,21 +218,3 @@ headers["Sensitivity"] = "private"
 
 mail(to: to_email, subject: "Test", body: "test")
 ```
-
-Update Note!
-============
-
-If you have been using Version 0.0.5 or earlier of this gem, when you upgrade, you'll need to 
-change your initalizer as follows:
-
-```
-SparkpostRails.configure do |c|
-```
-
-becomes: 
-
-```
-SparkPostRails.configure do |c|
-```
-
-We have changed the module name to align with the official SparkPost gem's naming convention.

@@ -23,7 +23,7 @@ module SparkPostRails
 
         prepare_subject_from mail
         prepare_cc_headers_from mail, sparkpost_data
-        prepare_inline_content_from mail
+        prepare_inline_content_from mail, sparkpost_data
         prepare_attachments_from mail
       end
 
@@ -139,8 +139,7 @@ module SparkPostRails
       end
     end
 
-
-    def prepare_inline_content_from mail
+    def prepare_inline_content_from mail, sparkpost_data
       if mail.multipart?
         if mail.html_part
           @data[:content][:html] = cleanse_encoding(mail.html_part.body.to_s)
@@ -150,7 +149,11 @@ module SparkPostRails
           @data[:content][:text] = cleanse_encoding(mail.text_part.body.to_s)
         end
       else
-        @data[:content][:text] = cleanse_encoding(mail.body.to_s)
+        if SparkPostRails.configuration.html_content_only || sparkpost_data[:html_content_only]
+          @data[:content][:html] = cleanse_encoding(mail.body.to_s)
+        else
+          @data[:content][:text] = cleanse_encoding(mail.body.to_s)
+        end
       end
     end
 

@@ -25,6 +25,7 @@ module SparkPostRails
     attr_accessor :transactional
     attr_accessor :ip_pool
     attr_accessor :inline_css
+    attr_accessor :html_content_only
 
     attr_accessor :subaccount
 
@@ -50,6 +51,7 @@ module SparkPostRails
       @transactional = false
       @ip_pool = nil
       @inline_css = false
+      @html_content_only = false
 
       @subaccount = nil
     end
