@@ -48,6 +48,7 @@ SparkPostRails.configure do |c|
   c.transactional = true
   c.ip_pool = "MY-POOL"
   c.inline_css = true
+  c.html_content_only = true
   c.subaccount = "123"
 end
 ```
@@ -63,6 +64,7 @@ campaign_id = nil
 transactional = false
 ip_pool = nil
 inline_css = false
+html_content_only = false
 subaccount = nil
 ```
 
@@ -143,7 +145,7 @@ mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
 
 By default, content from single-part messages is sent at plain-text.  If you are only intending to send HTML email, with no plain-text part, you can specify this 
-as shown below:
+as shown below.  You can also set this in the configuration to ensure that all single-part emails are sent as html.
 
 ```
 data = { html_content_only: true }
