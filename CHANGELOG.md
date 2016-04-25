@@ -1,3 +1,9 @@
+1.3.0
+=====
+* Convert to raising a StandardError rather than Exception
+* Support for inline_css functionality (thanks to @daniilsunyaev)
+* Support for html-only emails when using inline-content.
+
 1.2.0
 =====
 
