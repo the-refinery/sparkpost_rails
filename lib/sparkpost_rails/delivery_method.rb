@@ -150,7 +150,7 @@ module SparkPostRails
           @data[:content][:text] = cleanse_encoding(mail.text_part.body.to_s)
         end
       else
-        @data[:content][:text] = cleanse_encoding(mail.body.to_s)
+        @data[:content][:html] = cleanse_encoding(mail.body.to_s)
       end
     end
 
