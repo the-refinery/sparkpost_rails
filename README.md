@@ -47,6 +47,7 @@ SparkPostRails.configure do |c|
   c.campaign_id = 'YOUR-CAMPAIGN'
   c.transactional = true
   c.ip_pool = "MY-POOL"
+  c.inline_css = true
   c.subaccount = "123"
 end
 ```
@@ -61,6 +62,7 @@ return_path = nil
 campaign_id = nil
 transactional = false
 ip_pool = nil
+inline_css = false
 subaccount = nil
 ```
 
