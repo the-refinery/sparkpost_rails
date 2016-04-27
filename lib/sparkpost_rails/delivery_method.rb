@@ -14,6 +14,7 @@ module SparkPostRails
       sparkpost_data = find_sparkpost_data_from mail
 
       prepare_recipients_from mail, sparkpost_data
+      prepare_recipients_data_from sparkpost_data
 
       if sparkpost_data.has_key?(:template_id)
         prepare_template_content_from sparkpost_data
@@ -92,6 +93,17 @@ module SparkPostRails
         { address: { email: email, header_to: header_to } }
       else
         { address: { email: email } }
+      end
+    end
+
+    # See https://developers.sparkpost.com/api/#/introduction/substitutions-reference/links-and-substitution-expressions-within-substitution-values
+    def prepare_recipients_data_from sparkpost_data
+      if (recipients_data = sparkpost_data[:recipients])
+        @data[:recipients].each_with_index do |recipient, index|
+          if (recipient_data = recipients_data[index])
+            recipient.merge!(recipient_data)
+          end
+        end
       end
     end
 
