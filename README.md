@@ -196,6 +196,21 @@ data = { substitution_data: sub_data }
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
 
+### Recipient-specific Data
+When sending to multiple recipients, you can pass an array of data to complement each recipient. Simply pass an array called recipients containing an array of the additional data (e.g. substitution_data).
+
+```
+recipients = ['recipient1@email.com', 'recipient2@email.com']
+sparkpost_data = {
+  recipients: [
+    { substitution_data: { name: 'Recipient1' } },
+    { substitution_data: { name: 'Recipient2' } }
+  ]
+}
+mail(to: recipients, sparkpost_data: sparkpost_data)
+```
+
+
 ### Using SparkPost Templates
 If you would rather leverage SparkPost's powerful templates rather than building ActionMailer views, SparkPostRails can support that as well.  Simply
 add your template id to the sparkpost_data hash:
