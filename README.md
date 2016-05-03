@@ -213,12 +213,14 @@ mail(to: recipients, sparkpost_data: sparkpost_data)
 
 ### Using SparkPost Templates
 If you would rather leverage SparkPost's powerful templates rather than building ActionMailer views, SparkPostRails can support that as well.  Simply
-add your template id to the sparkpost_data hash:
+add your template id to the sparkpost_data hash. By default, ActionMailer finds a template to use within views, a workaround to prevent this default action is to explicitly pass a block with an empty text part:
 
 ```
 data = { template_id: "MY-TEMPLATE" }
 
-mail(to: to_email, sparkpost_data: data)
+mail(to: to_email, sparkpost_data: data) do |format|
+  format.text { render text: "" }
+end
 ```
 
 **NOTE**: All inline-content that may exist in your mail message will be ignored, as the SparkPost API does not accept that data when a template id is 
