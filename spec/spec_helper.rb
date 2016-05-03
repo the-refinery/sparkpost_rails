@@ -23,7 +23,7 @@ class Mailer < ActionMailer::Base
   def test_email options = {}
     data = {
       from: "from@example.com",
-      to: "to@example.com",
+      to: options[:to] || "to@example.com",
       subject: "Test Email",
       text_part: "Hello, Testing!"
     }
