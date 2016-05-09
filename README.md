@@ -89,6 +89,17 @@ data returned by the API.
 SparkPostRails will support multiple recipients, multilple CC, multiple BCC, ReplyTo address, file attachments, inline images, multi-part (HTML and plaintext) messages - 
 all utilizing the standard ActionMailer methodologies.
 
+Handling Errors
+---------------
+If you are using `ActiveJob` and wish to do something special when the SparkPost API responds with an error condition you can do so by rescuing these exceptions via `ActionMailer::DeliveryJob`. Simply add an initializer:
+
+`config/initializers/action_mailer.rb`
+
+```
+ActionMailer::DeliveryJob.rescue_from(SparkPostRails::DeliveryException) do |exception|
+  # do something special with the error
+end
+```
 
 SparkPost Specific Features
 ---------------------------
