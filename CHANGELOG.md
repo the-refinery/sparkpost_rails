@@ -1,3 +1,9 @@
+1.4.0
+=====
+* Update to support use with Rails 5.0.0 RCs
+* Improved data included in the DeliveryException
+* Support for Recipient-Specific data
+
 1.3.0
 =====
 * Convert to raising a StandardError rather than Exception
