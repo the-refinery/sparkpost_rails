@@ -26,6 +26,7 @@ SparkPostRails.configure do |c|
   c.api_key = 'YOUR API KEY'
 end
 ```
+Note that an initializer file is not required to use this gem. If an initializer is not provided, default values will be used. See ["Additional Configuration"](#additional-configuration) below for a list of all the default settings.
 
 In each environment configuration file from which you want to send emails via Sparkpost, (i.e. `config/environments/production.rb`) add
 
