@@ -21,7 +21,7 @@ describe SparkPostRails::DeliveryMethod do
 
       actual_recipients = @delivery_method.data[:recipients]
       expect(actual_recipients.length).to eq(recipients.length)
-      expect(actual_recipients).to eq(recipients.each_with_index.map { |recipient, index| recipients_data[index].merge(address: {email: recipient}) })
+      expect(actual_recipients).to match(recipients.each_with_index.map { |recipient, index| recipients_data[index].merge(address: {email: recipient, header_to: anything}) })
     end
 
   end
