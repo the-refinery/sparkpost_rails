@@ -5,13 +5,15 @@ require "sparkpost_rails"
 
 RSpec.configure do |config|
 
-  config.before(:all) do
-    SparkPostRails.configure do |c|
-      c.api_key = "TESTKEY1234"
+  config.before(:each) do |example|
+    if example.metadata[:skip_configure]
+      SparkPostRails.configuration = nil # Reset configuration
+    else
+      SparkPostRails.configure do |c|
+        c.api_key = "TESTKEY1234"
+      end
     end
-  end
 
-  config.before(:each) do
     stub_request(:any, "https://api.sparkpost.com/api/v1/transmissions").
       to_return(body: "{\"results\":{\"total_rejected_recipients\":0,\"total_accepted_recipients\":1,\"id\":\"00000000000000000\"}}", status: 200)
   end
