@@ -1,3 +1,9 @@
+1.5.0
+=====
+* Fixed issue with missing header_to for multiple to recipients
+* Initializer is no longer required if the default config values are acceptable
+
+
 1.4.0
 =====
 * Update to support use with Rails 5.0.0 RCs
