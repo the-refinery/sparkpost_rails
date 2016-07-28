@@ -42,11 +42,7 @@ module SparkPostRails
 
   private
     def find_sparkpost_data_from mail
-      if mail[:sparkpost_data]
-        eval(mail[:sparkpost_data].value)
-      else
-        Hash.new
-      end
+      mail.sparkpost_data
     end
 
     def prepare_recipients_from mail, sparkpost_data
