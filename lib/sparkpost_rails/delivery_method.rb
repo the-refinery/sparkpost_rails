@@ -28,6 +28,7 @@ module SparkPostRails
         prepare_attachments_from mail
       end
 
+      prepare_metadata
       prepare_substitution_data_from sparkpost_data
       prepare_description_from sparkpost_data
       prepare_options_from mail, sparkpost_data
@@ -41,6 +42,12 @@ module SparkPostRails
     end
 
   private
+    def prepare_metadata
+      @data[:metadata] = Hash.new
+      @data[:metadata][:binding] = SparkPostRails.configuration.api_binding
+      @data[:metadata][:mailtype]= SparkPostRails.configuration.mailtype
+    end
+
     def find_sparkpost_data_from mail
       if mail[:sparkpost_data]
         eval(mail[:sparkpost_data].value)
@@ -374,7 +381,7 @@ module SparkPostRails
     end
 
     def post_to_api
-      url = "https://guardian.msyscloud.com/api/v1/transmissions"
+      url = SparkPostRails.configuration.api_endpoint
 
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
