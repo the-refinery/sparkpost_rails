@@ -36,6 +36,8 @@ module SparkPostRails
 
     attr_accessor :subaccount
 
+    attr_accessor :http_proxy
+
     def initialize
       set_defaults
     end

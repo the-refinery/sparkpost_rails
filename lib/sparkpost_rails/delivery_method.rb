@@ -387,6 +387,15 @@ module SparkPostRails
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
 
+      if SparkPostRails.configuration.http_proxy
+        proxy_uri = URI(SparkPostRails.configuration.http_proxy)
+        http.proxy_from_env = false # make sure proxy settings can be overridden
+        http.proxy_address = proxy_uri.host
+        http.proxy_port = proxy_uri.port
+        http.proxy_user = proxy_uri.user if proxy_uri.user
+        http.proxy_pass = proxy_uri.password if proxy_uri.password 
+      end
+
       request = Net::HTTP::Post.new(uri.path, @headers)
       request.body = JSON.generate(@data)
 
