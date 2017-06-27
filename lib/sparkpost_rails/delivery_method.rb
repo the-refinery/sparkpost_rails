@@ -29,6 +29,7 @@ module SparkPostRails
       end
 
       prepare_substitution_data_from sparkpost_data
+      prepare_metadata_from sparkpost_data
       prepare_description_from sparkpost_data
       prepare_options_from mail, sparkpost_data
       prepare_additional_mail_headers_from mail
@@ -119,6 +120,12 @@ module SparkPostRails
       end
     end
 
+    def prepare_metadata_from sparkpost_data
+      if sparkpost_data[:metadata]
+        @data[:metadata] = sparkpost_data[:metadata]
+      end
+    end
+
     def prepare_from_address_from mail
       if !mail[:from].display_names.first.nil?
         from = { email: mail.from.first, name: mail[:from].display_names.first }
@@ -179,7 +186,7 @@ module SparkPostRails
       inline_images = Array.new
 
       mail.attachments.each do |attachment|
-        #We decode and reencode here to ensure that attachments are 
+        #We decode and reencode here to ensure that attachments are
         #Base64 encoded without line breaks as required by the API.
         attachment_data = { name: attachment.inline? ? attachment.url : attachment.filename,
                             type: attachment.content_type,
@@ -382,7 +389,6 @@ module SparkPostRails
 
       request = Net::HTTP::Post.new(uri.path, @headers)
       request.body = JSON.generate(@data)
-
       http.request(request)
     end
 
