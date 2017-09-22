@@ -71,7 +71,7 @@ describe SparkPostRails::DeliveryMethod do
                                                              a_hash_including({address: {email: "to2@example.com", header_to: anything}}),
                                                              {address: {email: "cc@example.com", header_to: "to1@example.com"}},
                                                              {address: {email: "bcc@example.com", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc@example.com"})
       end
 
       it "handles name and email" do
@@ -82,7 +82,7 @@ describe SparkPostRails::DeliveryMethod do
                                                              a_hash_including({address: {email: "to2@example.com", name: "Sam Test", header_to: anything}}),
                                                              {address: {email: "cc@example.com", name: "Carl Test", header_to: "to1@example.com"}},
                                                              {address: {email: "bcc@example.com", name: "Brock Test", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc@example.com"})
       end
 
       it "handles mix of email only and name/email" do
@@ -95,7 +95,7 @@ describe SparkPostRails::DeliveryMethod do
                                                              {address: {email: "cc2@example.com", name: "Chris Test", header_to: "to1@example.com"}},
                                                              {address: {email: "bcc1@example.com", name: "Brock Test", header_to: "to1@example.com"}},
                                                              {address: {email: "bcc2@example.com", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc1@example.com,cc2@example.com"})
       end
     end
   end

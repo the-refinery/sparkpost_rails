@@ -155,7 +155,7 @@ module SparkPostRails
           emails << copy[:address][:email]
         end
 
-        @data[:content][:headers] = { cc: emails }
+        @data[:content][:headers] = { cc: emails.join(",") }
       end
     end
 
