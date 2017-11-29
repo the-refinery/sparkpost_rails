@@ -19,8 +19,11 @@ module SparkPostRails
 
   class Configuration
     attr_accessor :api_key
+    attr_accessor :api_endpoint
+    attr_accessor :api_binding
     attr_accessor :sandbox
 
+    attr_accessor :mailtype
     attr_accessor :track_opens
     attr_accessor :track_clicks
 
@@ -33,6 +36,8 @@ module SparkPostRails
     attr_accessor :html_content_only
 
     attr_accessor :subaccount
+
+    attr_accessor :http_proxy
 
     def initialize
       set_defaults

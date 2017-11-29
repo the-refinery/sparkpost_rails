@@ -28,6 +28,7 @@ module SparkPostRails
         prepare_attachments_from mail
       end
 
+      prepare_metadata
       prepare_substitution_data_from sparkpost_data
       prepare_metadata_from sparkpost_data
       prepare_description_from sparkpost_data
@@ -42,6 +43,12 @@ module SparkPostRails
     end
 
   private
+    def prepare_metadata
+      @data[:metadata] = Hash.new
+      @data[:metadata][:binding] = SparkPostRails.configuration.api_binding
+      @data[:metadata][:mailtype]= SparkPostRails.configuration.mailtype
+    end
+
     def find_sparkpost_data_from mail
       mail.sparkpost_data
     end
@@ -151,7 +158,7 @@ module SparkPostRails
           emails << copy[:address][:email]
         end
 
-        @data[:content][:headers] = { cc: emails }
+        @data[:content][:headers] = { cc: emails.to_json }
       end
     end
 
@@ -377,11 +384,20 @@ module SparkPostRails
     end
 
     def post_to_api
-      url = "https://api.sparkpost.com/api/v1/transmissions"
+      url = SparkPostRails.configuration.api_endpoint
 
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
+
+      if SparkPostRails.configuration.http_proxy
+        proxy_uri = URI(SparkPostRails.configuration.http_proxy)
+        http.proxy_from_env = false # make sure proxy settings can be overridden
+        http.proxy_address = proxy_uri.host
+        http.proxy_port = proxy_uri.port
+        http.proxy_user = proxy_uri.user if proxy_uri.user
+        http.proxy_pass = proxy_uri.password if proxy_uri.password 
+      end
 
       request = Net::HTTP::Post.new(uri.path, @headers)
       request.body = JSON.generate(@data)
