@@ -188,7 +188,7 @@ module SparkPostRails
       mail.attachments.each do |attachment|
         #We decode and reencode here to ensure that attachments are
         #Base64 encoded without line breaks as required by the API.
-        attachment_data = { name: attachment.inline? ? attachment.url : attachment.filename,
+        attachment_data = { name: attachment.inline? ? attachment.cid : attachment.filename,
                             type: attachment.content_type,
                             data: Base64.strict_encode64(attachment.body.decoded) }
 
