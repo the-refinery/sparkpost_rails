@@ -5,6 +5,10 @@ require "sparkpost_rails"
 
 RSpec.configure do |config|
 
+  config.before(:all) do
+    ActionMailer::Base.send :include, SparkPostRails::DataOptions
+  end
+
   config.before(:each) do |example|
     if example.metadata[:skip_configure]
       SparkPostRails.configuration = nil # Reset configuration
