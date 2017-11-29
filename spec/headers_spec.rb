@@ -18,7 +18,7 @@ describe SparkPostRails::DeliveryMethod do
       test_email = Mailer.test_email cc: "Carl Test <cc@example.com>", headers: {"Priority" => "urgent", "Sensitivity" => "private"}
       @delivery_method.deliver!(test_email)
 
-      expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"], "Priority" => "urgent", "Sensitivity" => "private"})
+      expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc@example.com", "Priority" => "urgent", "Sensitivity" => "private"})
     end
 
     it "does not pass inappropriate headers through to the API" do

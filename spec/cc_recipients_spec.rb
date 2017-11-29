@@ -14,7 +14,7 @@ describe SparkPostRails::DeliveryMethod do
 
         expect(@delivery_method.data[:recipients]).to match([a_hash_including({address: {email: "to@example.com", header_to: anything}}),
                                                              {address: {email: "cc@example.com", header_to: "to@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc@example.com"})
       end
 
       it "handles name and email" do
@@ -23,7 +23,7 @@ describe SparkPostRails::DeliveryMethod do
 
         expect(@delivery_method.data[:recipients]).to match([a_hash_including({address: {email: "to@example.com", name: "Joe Test", header_to: anything}}),
                                                              {address: {email: "cc@example.com", name: "Carl Test", header_to: "to@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc@example.com"})
       end
     end
 
@@ -35,7 +35,7 @@ describe SparkPostRails::DeliveryMethod do
         expect(@delivery_method.data[:recipients]).to match([a_hash_including({address: {email: "to@example.com", header_to: anything}}),
                                                              {address: {email: "cc1@example.com", header_to: "to@example.com"}},
                                                              {address: {email: "cc2@example.com", header_to: "to@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc1@example.com,cc2@example.com"})
       end
 
       it "handles name and email" do
@@ -45,7 +45,7 @@ describe SparkPostRails::DeliveryMethod do
         expect(@delivery_method.data[:recipients]).to match([a_hash_including({address: {email: "to@example.com", name: "Joe Test", header_to: anything}}),
                                                              {address: {email: "cc1@example.com", name: "Carl Test", header_to: "to@example.com"}},
                                                              {address: {email: "cc2@example.com", name: "Chris Test", header_to: "to@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc1@example.com,cc2@example.com"})
       end
 
       it "handles mix of email only and name/email" do
@@ -55,7 +55,7 @@ describe SparkPostRails::DeliveryMethod do
         expect(@delivery_method.data[:recipients]).to match([a_hash_including({address: {email: "to@example.com", name: "Joe Test", header_to: anything}}),
                                                              {address: {email: "cc1@example.com", name: "Carl Test", header_to: "to@example.com"}},
                                                              {address: {email: "cc2@example.com", header_to: "to@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc1@example.com,cc2@example.com"})
       end
     end
 
@@ -67,7 +67,7 @@ describe SparkPostRails::DeliveryMethod do
         expect(@delivery_method.data[:recipients]).to match([a_hash_including({address: {email: "to1@example.com", header_to: anything}}),
                                                              a_hash_including({address: {email: "to2@example.com", header_to: anything}}),
                                                              {address: {email: "cc@example.com", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc@example.com"})
       end
 
       it "handles name and email" do
@@ -77,7 +77,7 @@ describe SparkPostRails::DeliveryMethod do
         expect(@delivery_method.data[:recipients]).to match([a_hash_including({address: {email: "to1@example.com", name: "Joe Test", header_to: anything}}),
                                                              a_hash_including({address: {email: "to2@example.com", name: "Sam Test", header_to: anything}}),
                                                              {address: {email: "cc@example.com", name: "Carl Test", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc@example.com"})
       end
     end
 
@@ -90,7 +90,7 @@ describe SparkPostRails::DeliveryMethod do
                                                              a_hash_including({address: {email: "to2@example.com", header_to: anything}}),
                                                              {address: {email: "cc1@example.com", header_to: "to1@example.com"}},
                                                              {address: {email: "cc2@example.com", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc1@example.com,cc2@example.com"})
       end
 
       it "handles name and email" do
@@ -101,7 +101,7 @@ describe SparkPostRails::DeliveryMethod do
                                                              a_hash_including({address: {email: "to2@example.com", name: "Sam Test", header_to: anything}}),
                                                              {address: {email: "cc1@example.com", name: "Carl Test", header_to: "to1@example.com"}},
                                                              {address: {email: "cc2@example.com", name: "Chris Test", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc1@example.com,cc2@example.com"})
       end
 
       it "handles mix of email only and name/email for to recipients" do
@@ -112,7 +112,7 @@ describe SparkPostRails::DeliveryMethod do
                                                              a_hash_including({address: {email: "to2@example.com", header_to: anything}}),
                                                              {address: {email: "cc1@example.com", header_to: "to1@example.com"}},
                                                              {address: {email: "cc2@example.com", name: "Chris Test", header_to: "to1@example.com"}}])
-        expect(@delivery_method.data[:content][:headers]).to eq({cc: ["cc1@example.com", "cc2@example.com"]})
+        expect(@delivery_method.data[:content][:headers]).to eq({cc: "cc1@example.com,cc2@example.com"})
       end
     end
   end
