@@ -2,6 +2,10 @@
 =====
 * Fixed issue with missing header_to for multiple to recipients
 * Initializer is no longer required if the default config values are acceptable
+* Added Metadata support (thanks ssuttner)
+* Use cid instead of url for the inline attachments (thanks norbertszivos)
+* Update dependency restriction to support rails 5.1 (thanks viamin)
+* Fix problem with CC field (thanks norbertszivos)
 
 
 1.4.0
