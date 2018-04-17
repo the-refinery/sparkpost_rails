@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sparkpost_rails (1.5.0)
+    sparkpost_rails (1.5.1)
       rails (>= 4.0, < 5.3)
 
 GEM
