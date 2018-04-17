@@ -1,3 +1,8 @@
+1.5.1
+=====
+* Update to support use with Rails 5.2.x
+
+
 1.5.0
 =====
 * Fixed issue with missing header_to for multiple to recipients
