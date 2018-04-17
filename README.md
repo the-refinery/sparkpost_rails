@@ -167,7 +167,7 @@ mail(subject: "Test", body: "test", sparkpost_data: data)
 SparkPostRails supports using SparkPost stored recipient lists. Simply add the `list_id` to the `sparkpost_data` hash on the mail message:
 
 ```ruby
-data = { list_id: "MY-LIST"}
+data = { recipient_list_id: "MY-LIST"}
 
 mail(subject: "Test", body: "test", sparkpost_data: data)
 ```
