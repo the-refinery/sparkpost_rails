@@ -14,7 +14,9 @@ module SparkPostRails
           sparkpost_data = headers.delete(:sparkpost_data)
           sparkpost_data ||= {}
           super(headers, &block).tap do |message|
-            message.singleton_class.class_eval { attr_accessor "sparkpost_data" }
+            unless message.respond_to?(:sparkpost_data=)
+              message.singleton_class.class_eval { attr_accessor "sparkpost_data" }
+            end
             message.sparkpost_data = sparkpost_data
           end
         end

@@ -7,6 +7,7 @@ RSpec.configure do |config|
 
   config.before(:all) do
     ActionMailer::Base.send :include, SparkPostRails::DataOptions
+    Mail::Message.send :include, SparkPostRails::MessageData
   end
 
   config.before(:each) do |example|

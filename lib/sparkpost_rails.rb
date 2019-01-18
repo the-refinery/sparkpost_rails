@@ -1,6 +1,7 @@
 require "sparkpost_rails/data_options"
 require "sparkpost_rails/delivery_method"
 require "sparkpost_rails/exceptions"
+require "sparkpost_rails/message_data"
 require "sparkpost_rails/railtie"
 
 module SparkPostRails

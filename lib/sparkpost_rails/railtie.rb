@@ -11,5 +11,11 @@ module SparkPostRails
         ActionMailer::Base.send :include, SparkPostRails::DataOptions
       end
     end
+
+    initializer 'sparkpost_rails.include_message_data' do
+      ActiveSupport.on_load :action_mailer do
+        Mail::Message.send :include, SparkPostRails::MessageData
+      end
+    end
   end
 end
