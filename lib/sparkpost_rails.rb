@@ -18,6 +18,7 @@ module SparkPostRails
   end
 
   class Configuration
+    attr_accessor :region
     attr_accessor :api_key
     attr_accessor :sandbox
 
@@ -39,6 +40,8 @@ module SparkPostRails
     end
 
     def set_defaults
+      @region = :us
+
       if ENV.has_key?("SPARKPOST_API_KEY")
         @api_key = ENV["SPARKPOST_API_KEY"]
       else

@@ -41,7 +41,7 @@ module SparkPostRails
       process_result result
     end
 
-  private
+    private
     def find_sparkpost_data_from mail
       mail.sparkpost_data
     end
@@ -207,6 +207,7 @@ module SparkPostRails
     def prepare_options_from mail, sparkpost_data
       @data[:options] = Hash.new
 
+      prepare_region_from sparkpost_data
       prepare_sandbox_mode_from sparkpost_data
       prepare_open_tracking_from sparkpost_data
       prepare_click_tracking_from sparkpost_data
@@ -217,6 +218,14 @@ module SparkPostRails
       prepare_ip_pool_from sparkpost_data
       prepare_inline_css_from sparkpost_data
       prepare_delivery_schedule_from mail
+    end
+
+    def prepare_region_from sparkpost_data
+      @data[:options][:region] = SparkPostRails.configuration.region
+
+      if sparkpost_data.has_key?(:region)
+        @data[:options][:region] = sparkpost_data[:region]
+      end
     end
 
     def prepare_sandbox_mode_from sparkpost_data
@@ -377,7 +386,12 @@ module SparkPostRails
     end
 
     def post_to_api
-      url = "https://api.sparkpost.com/api/v1/transmissions"
+      url =
+        if @data[:options][:region] == :eu
+          "https://api.eu.sparkpost.com/api/v1/transmissions"
+        else
+          "https://api.sparkpost.com/api/v1/transmissions"
+        end
 
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
