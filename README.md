@@ -38,6 +38,7 @@ You can establish values for a number of SparkPost settings in the initializer. 
 
 ```ruby
 SparkPostRails.configure do |c|
+  c.region = :eu                                  # default: :us
   c.sandbox = true                                # default: false
   c.track_opens = true                            # default: false
   c.track_clicks = true                           # default: false
