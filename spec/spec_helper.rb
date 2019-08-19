@@ -71,14 +71,14 @@ class Mailer < ActionMailer::Base
     if data.has_key?(:html_part)
 
       mail(data) do |format|
-        format.text {render text: data[:text_part]}
-        format.html {render text: data[:html_part]}
+        format.text {render plain: data[:text_part]}
+        format.html {render plain: data[:html_part]}
       end
 
     else
 
       mail(data) do |format|
-        format.text {render text: data[:text_part]}
+        format.text {render plain: data[:text_part]}
       end
 
     end
