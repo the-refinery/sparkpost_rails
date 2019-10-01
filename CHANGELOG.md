@@ -1,3 +1,8 @@
+unreleased
+==========
+
+* Update to support Rails 6
+
 1.5.1
 =====
 * Update to support use with Rails 5.2.x
