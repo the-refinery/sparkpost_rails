@@ -1,3 +1,8 @@
+1.5.3
+==========
+
+* Dependency update to address security vulnerabilities
+
 1.5.2
 ==========
 
