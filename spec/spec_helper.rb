@@ -1,5 +1,4 @@
 require 'webmock/rspec'
-require 'rails'
 require 'action_mailer'
 require "sparkpost_rails"
 require "active_support/core_ext/integer/time"
