@@ -1,3 +1,5 @@
+require 'rails/railtie'
+
 module SparkPostRails
   class Railtie < Rails::Railtie
     initializer "sparkpost_rails.add_delivery_method" do
