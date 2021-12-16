@@ -15,9 +15,8 @@ Gem::Specification.new do |s|
   s.files = Dir["{lib}/**/*"] + ["LICENSE", "README.md"]
   s.test_files = Dir["{spec}/**/*"]
 
-  %w[actionmailer railties].each do |rails_gem|
-    s.add_dependency rails_gem, '>= 4.0', '< 6.2'
-  end
+  s.add_dependency 'actionmailer', '>= 4.0', '< 8'
+  s.add_dependency 'railties', '>= 4.0', '< 8'
 
   s.add_development_dependency "rspec", '>= 3.4.0'
   s.add_development_dependency "webmock", '>= 1.24.2'
