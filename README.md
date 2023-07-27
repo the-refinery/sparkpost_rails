@@ -38,16 +38,17 @@ You can establish values for a number of SparkPost settings in the initializer. 
 
 ```ruby
 SparkPostRails.configure do |c|
-  c.sandbox = true                                # default: false
-  c.track_opens = true                            # default: false
-  c.track_clicks = true                           # default: false
-  c.return_path = 'BOUNCE-EMAIL@YOUR-DOMAIN.COM'  # default: nil
-  c.campaign_id = 'YOUR-CAMPAIGN'                 # default: nil
-  c.transactional = true                          # default: false
-  c.ip_pool = "MY-POOL"                           # default: nil
-  c.inline_css = true                             # default: false
-  c.html_content_only = true                      # default: false
-  c.subaccount = "123"                            # default: nil
+  c.api_endpoint = "https://api.eu.sparkpost.com/api/" # default: "https://api.sparkpost.com/api/"
+  c.sandbox = true                                     # default: false
+  c.track_opens = true                                 # default: false
+  c.track_clicks = true                                # default: false
+  c.return_path = 'BOUNCE-EMAIL@YOUR-DOMAIN.COM'       # default: nil
+  c.campaign_id = 'YOUR-CAMPAIGN'                      # default: nil
+  c.transactional = true                               # default: false
+  c.ip_pool = "MY-POOL"                                # default: nil
+  c.inline_css = true                                  # default: false
+  c.html_content_only = true                           # default: false
+  c.subaccount = "123"                                 # default: nil
 end
 ```
 
@@ -63,15 +64,15 @@ Example:
 
 ```ruby
 {
-  "total_rejected_recipients" => 0, 
-  "total_accepted_recipients" => 1, 
+  "total_rejected_recipients" => 0,
+  "total_accepted_recipients" => 1,
   "id" => "00000000000000"
 }
 ```
 
-If the SparkPost API reponds with an error condition, SparkPostRails will raise a `SparkPostRails::DeliveryException`, which will include all the message data returned by the API.
+If the SparkPost API responds with an error condition, SparkPostRails will raise a `SparkPostRails::DeliveryException`, which will include all the message data returned by the API.
 
-SparkPostRails will support multiple recipients, multilple CC, multiple BCC, ReplyTo address, file attachments, inline images, multi-part (HTML and plaintext) messages - all utilizing the standard `ActionMailer` methodologies.
+SparkPostRails will support multiple recipients, multiple CC, multiple BCC, ReplyTo address, file attachments, inline images, multi-part (HTML and plaintext) messages - all utilizing the standard `ActionMailer` methodologies.
 
 Handling Errors
 ---------------
@@ -82,6 +83,7 @@ If you are using `ActiveJob` and wish to do something special when the SparkPost
 ```ruby
 ActionMailer::DeliveryJob.rescue_from(SparkPostRails::DeliveryException) do |exception|
   # do something special with the error
+  # do something special with the error
 end
 ```
 
@@ -89,23 +91,23 @@ SparkPost-Specific Features
 ---------------------------
 
 ### Configuration Settings
-You can specifiy values for any or all of the configuration settings listed above on an individual message. Simply add a hash of these values to the mail message in a field named `sparkpost_data`:
+You can specify values for any or all of the configuration settings listed above on an individual message. Simply add a hash of these values to the mail message in a field named `sparkpost_data`:
 
 ```ruby
-data = { 
+data = {
   track_opens: true,
   track_clicks: false,
-  campaign_id: "My Campaign",
+  campaign_id: 'My Campaign',
   transactional: true,
-  ip_pool = "SPECIAL_POOL",
-  api_key = "MESSAGE_SPECIFIC_API_KEY"
-  subaccount = "123"
+  ip_pool: 'SPECIAL_POOL',
+  api_key: 'MESSAGE_SPECIFIC_API_KEY',
+  subaccount: '123'
 }
 
 mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 ```
 
-Additionally, `return_path` can be overriden on a specific email by setting that field on the mail message itself:
+Additionally, `return_path` can be overridden on a specific email by setting that field on the mail message itself:
 
 ```ruby
 mail(to: to_email, subject: "Test", body: "test", return_path: "bounces@example.com")
@@ -124,7 +126,7 @@ mail(to: to_email, subject: "Test", body: "test", sparkpost_data: data)
 To schedule the generation of messages for a future date and time, specify a start time in the `date` parameter of the mail. The `date` must be in the future and less than 1 year from today. If `date` is in the past or too far in the future, no date will be passed, and no delivery schedule will be set.
 
 ```ruby
-start_time = DateTime.now + 4.hours 
+start_time = DateTime.now + 4.hours
 
 mail(to: to_email, subject: "Test", body: "test", date: start_time)
 ```
@@ -218,7 +220,7 @@ end
 **NOTE**: All inline-content that may exist in your mail message will be ignored, as the SparkPost API does not accept that data when a template id is supplied. This includes `Subject`, `From`, `ReplyTo`, Attachments, and Inline Images.
 
 ###Other Mail Headers
-If you need to identify custom mail headers for your messages, use the `ActionMailer` `header[]` method. The gem will pass all approprite headers through to the API. Note, per the SparkPost API documentation
+If you need to identify custom mail headers for your messages, use the `ActionMailer` `header[]` method. The gem will pass all appropriate headers through to the API. Note, per the SparkPost API documentation
 
 > Headers such as 'Content-Type' and 'Content-Transfer-Encoding' are not allowed here as they are auto-generated upon construction of the email.
 

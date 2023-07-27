@@ -1,4 +1,4 @@
 module SparkPostRails
-  VERSION = "1.5.1"
+  VERSION = "1.5.5"
 end
 

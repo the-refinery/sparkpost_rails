@@ -1,7 +1,14 @@
-unreleased
+1.5.3
+==========
+
+* Dependency update to address security vulnerabilities
+
+1.5.2
 ==========
 
 * Update to support Rails 6
+* Add support for configurable api endpoint
+* Update of dependency versions
 
 1.5.1
 =====

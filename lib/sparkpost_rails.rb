@@ -19,6 +19,7 @@ module SparkPostRails
 
   class Configuration
     attr_accessor :api_key
+    attr_accessor :api_endpoint
     attr_accessor :sandbox
 
     attr_accessor :track_opens
@@ -44,6 +45,8 @@ module SparkPostRails
       else
         @api_key = ""
       end
+
+      @api_endpoint = "https://api.sparkpost.com/api/"
 
       @sandbox = false
 
