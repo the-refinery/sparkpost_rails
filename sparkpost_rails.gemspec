@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = 'SparkPost for Rails'
   s.description = 'Delivery Method for Rails ActionMailer to send emails using the SparkPost API'
   s.license     = 'MIT'
-  s.required_ruby_version = '>= 2.7.0'
+  s.required_ruby_version = '~> 3.1.0'
 
   s.files = Dir['{lib}/**/*'] + %w[LICENSE README.md]
 
