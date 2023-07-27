@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SparkPostRails
   class DeliveryException < StandardError
     attr_reader :service_message, :service_description, :service_code

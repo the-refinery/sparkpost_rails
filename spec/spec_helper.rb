@@ -1,40 +1,40 @@
+# frozen_string_literal: true
+
 require 'webmock/rspec'
 require 'action_mailer'
-require "sparkpost_rails"
-require "active_support/core_ext/integer/time"
+require 'sparkpost_rails'
+require 'active_support/core_ext/integer/time'
 
 RSpec.configure do |config|
-
   config.before(:all) do
-    ActionMailer::Base.send :include, SparkPostRails::DataOptions
+    ActionMailer::Base.include SparkPostRails::DataOptions
   end
 
-  config.before(:each) do |example|
+  config.before do |example|
     if example.metadata[:skip_configure]
       SparkPostRails.configuration = nil # Reset configuration
     else
       SparkPostRails.configure do |c|
-        c.api_key = "TESTKEY1234"
+        c.api_key = 'TESTKEY1234'
       end
     end
     uri = URI.join(SparkPostRails.configuration.api_endpoint, 'v1/transmissions')
-    stub_request(:any, uri.to_s).
-      to_return(body: "{\"results\":{\"total_rejected_recipients\":0,\"total_accepted_recipients\":1,\"id\":\"00000000000000000\"}}", status: 200)
+    stub_request(:any, uri.to_s)
+      .to_return(body: '{"results":{"total_rejected_recipients":0,"total_accepted_recipients":1,"id":"00000000000000000"}}', status: 200)
   end
-
 end
 
-#A default mailer to generate the mail object
+# A default mailer to generate the mail object
 class Mailer < ActionMailer::Base
-  def test_email options = {}
+  def test_email(options = {})
     data = {
-      from: "from@example.com",
-      to: options[:to] || "to@example.com",
-      subject: "Test Email",
-      text_part: "Hello, Testing!"
+      from: 'from@example.com',
+      to: options[:to] || 'to@example.com',
+      subject: 'Test Email',
+      text_part: 'Hello, Testing!'
     }
 
-    if options.has_key?(:attachments)
+    if options.key?(:attachments)
       options[:attachments].times do |i|
         attachments["file_#{i}.txt"] = "This is file #{i}"
       end
@@ -42,7 +42,7 @@ class Mailer < ActionMailer::Base
       options.delete(:attachments)
     end
 
-    if options.has_key?(:images)
+    if options.key?(:images)
       options[:images].times do |i|
         attachments["image_#{i}.png"] = sparkpost_logo_contents
       end
@@ -50,7 +50,7 @@ class Mailer < ActionMailer::Base
       options.delete(:images)
     end
 
-    if options.has_key?(:inline_attachments)
+    if options.key?(:inline_attachments)
       options[:inline_attachments].times do |i|
         attachments.inline["image_#{i}.png"] = sparkpost_logo_contents
       end
@@ -58,27 +58,25 @@ class Mailer < ActionMailer::Base
       options.delete(:inline_attachments)
     end
 
-    if options.has_key?(:headers)
-      if options[:headers].class == Hash
-        headers options[:headers]
-      end
+    if options.key?(:headers)
+      headers options[:headers] if options[:headers].instance_of?(Hash)
 
       options.delete(:headers)
     end
 
     data.merge! options
 
-    if data.has_key?(:html_part)
+    if data.key?(:html_part)
 
       mail(data) do |format|
-        format.text {render plain: data[:text_part]}
-        format.html {render plain: data[:html_part]}
+        format.text { render plain: data[:text_part] }
+        format.html { render plain: data[:html_part] }
       end
 
     else
 
       mail(data) do |format|
-        format.text {render plain: data[:text_part]}
+        format.text { render plain: data[:text_part] }
       end
 
     end

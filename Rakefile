@@ -1,4 +1,6 @@
 #!/usr/bin/env rake
+# frozen_string_literal: true
+
 begin
   require 'bundler/setup'
 rescue LoadError
@@ -12,7 +14,7 @@ rescue LoadError
   RDoc::Task = Rake::RDocTask
 end
 
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
 require 'rake'
 require 'rspec/core/rake_task'
 
@@ -23,7 +25,6 @@ RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
-
 
 Bundler::GemHelper.install_tasks
 
@@ -41,4 +42,4 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = '--format documentation'
 end
 
-task :default => :spec
+task default: :spec

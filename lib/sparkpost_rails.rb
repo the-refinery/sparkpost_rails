@@ -1,7 +1,9 @@
-require "sparkpost_rails/data_options"
-require "sparkpost_rails/delivery_method"
-require "sparkpost_rails/exceptions"
-require "sparkpost_rails/railtie"
+# frozen_string_literal: true
+
+require 'sparkpost_rails/data_options'
+require 'sparkpost_rails/delivery_method'
+require 'sparkpost_rails/exceptions'
+require 'sparkpost_rails/railtie'
 
 module SparkPostRails
   class << self
@@ -18,35 +20,21 @@ module SparkPostRails
   end
 
   class Configuration
-    attr_accessor :api_key
-    attr_accessor :api_endpoint
-    attr_accessor :sandbox
-
-    attr_accessor :track_opens
-    attr_accessor :track_clicks
-
-    attr_accessor :campaign_id
-    attr_accessor :return_path
-
-    attr_accessor :transactional
-    attr_accessor :ip_pool
-    attr_accessor :inline_css
-    attr_accessor :html_content_only
-
-    attr_accessor :subaccount
+    attr_accessor :api_key, :api_endpoint, :sandbox, :track_opens, :track_clicks, :campaign_id, :return_path,
+                  :transactional, :ip_pool, :inline_css, :html_content_only, :subaccount
 
     def initialize
       set_defaults
     end
 
     def set_defaults
-      if ENV.has_key?("SPARKPOST_API_KEY")
-        @api_key = ENV["SPARKPOST_API_KEY"]
-      else
-        @api_key = ""
-      end
+      @api_key = if ENV.key?('SPARKPOST_API_KEY')
+                   ENV['SPARKPOST_API_KEY']
+                 else
+                   ''
+                 end
 
-      @api_endpoint = "https://api.sparkpost.com/api/"
+      @api_endpoint = 'https://api.sparkpost.com/api/'
 
       @sandbox = false
 
