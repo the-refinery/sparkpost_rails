@@ -1,0 +1,20 @@
+require:
+  - rubocop-rake
+
+Metrics:
+  Enabled: false
+
+Style:
+  Enabled: false
+
+Lint:
+  Enabled: false
+
+Layout/LineLength:
+  Enabled: false
+
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: gemspec
+
+AllCops:
+  NewCops: enable

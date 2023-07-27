@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe SparkPostRails::DeliveryException do
@@ -7,16 +9,17 @@ describe SparkPostRails::DeliveryException do
     let(:error) { 'Some delivery error' }
 
     it 'preserves original message' do
-      begin
-        raise subject
-      rescue SparkPostRails::DeliveryException => err
-        expect(error).to eq(err.message)
-      end
+      raise subject
+    rescue SparkPostRails::DeliveryException => e
+      expect(error).to eq(e.message)
     end
   end
 
   describe 'array with error details' do
-    let(:error) { [{ 'message' => 'Message generation rejected', 'description' => 'recipient address suppressed due to customer policy', 'code' => '1902' }] }
+    let(:error) do
+      [{ 'message' => 'Message generation rejected', 'description' => 'recipient address suppressed due to customer policy',
+         'code' => '1902' }]
+    end
 
     it 'assigns message' do
       expect(subject.service_message).to eq('Message generation rejected')
@@ -31,11 +34,9 @@ describe SparkPostRails::DeliveryException do
     end
 
     it 'preserves original message' do
-      begin
-        raise subject
-      rescue SparkPostRails::DeliveryException => err
-        expect(error.to_s).to eq(err.message)
-      end
+      raise subject
+    rescue SparkPostRails::DeliveryException => e
+      expect(error.to_s).to eq(e.message)
     end
   end
 
@@ -55,11 +56,9 @@ describe SparkPostRails::DeliveryException do
     end
 
     it 'preserves original message' do
-      begin
-        raise subject
-      rescue SparkPostRails::DeliveryException => err
-        expect(error.to_s).to eq(err.message)
-      end
+      raise subject
+    rescue SparkPostRails::DeliveryException => e
+      expect(error.to_s).to eq(e.message)
     end
   end
 end
