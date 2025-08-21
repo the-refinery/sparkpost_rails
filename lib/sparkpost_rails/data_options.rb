@@ -9,14 +9,19 @@ module SparkPostRails
 
       module InstanceMethods
 
-        def mail(headers={}, &block)
+        def mail(headers = {}, &block)
           headers = headers.clone
           sparkpost_data = headers.delete(:sparkpost_data)
           sparkpost_data ||= {}
-          super(headers, &block).tap do |message|
-            message.singleton_class.class_eval { attr_accessor "sparkpost_data" }
-            message.sparkpost_data = sparkpost_data
-          end
+          
+          # Call the original mail method
+          message = super(headers, &block)
+          
+          # Add sparkpost_data to the message
+          message.singleton_class.class_eval { attr_accessor :sparkpost_data }
+          message.sparkpost_data = sparkpost_data
+          
+          message
         end
 
       end

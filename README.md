@@ -6,6 +6,8 @@ SparkPost Rails
 
 This gem provides seamless integration of SparkPost with ActionMailer. It provides a `delivery_method` based upon the SparkPost API, and makes getting setup and sending email via SparkPost in a Rails app pretty painless.
 
+**Rails Compatibility**: This gem supports Rails 4.0 through Rails 7.x versions.
+
 Getting Started
 ---------------
 

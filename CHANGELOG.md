@@ -1,3 +1,11 @@
+1.6.0
+==========
+
+* **Rails 7.x Compatibility**: Added support for Rails 7.0 and 7.1
+* Updated dependency constraints to support Rails versions 4.0 through 7.x
+* Improved mail method handling for better Rails 7.x compatibility
+* Updated version number to reflect major compatibility improvement
+
 1.5.3
 ==========
 
